@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link href="index.css" rel="stylesheet" type="text/css" />
     <title >To Do List</title>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   
 <body>
@@ -18,11 +19,13 @@
 	
 	<section>
 		<br><br><br><br><br>
-		<ins onclick='showMyTasks()'>my tasks</ins>
-		<ins onclick='showDeletedTasks()'>deleted tasks</ins>
+		<ins onclick='currentUser.showMyTasks()'>my tasks</ins>
+		<ins onclick='currentUser.showDeletedTasks()'>deleted tasks</ins>
 		<br><br><br>
 		<ins onclick="addUser()">add user</ins>
 		<ins onclick="currentUser.changeUserName()">change User Name</ins>
+		<ins onclick="deleteUser()">delete user</ins>
+		<ins onclick="showAllUsers()">show all users</ins>
 	</section>
 </aside>
 
@@ -64,7 +67,37 @@
          <!--aria-hidden="true"-->
 	</div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
 
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span ></span>list of users</h4>
+        </div>
+
+        <div class="modal-body" style="padding:40px 50px;">
+          <table>
+          	<thead>
+          		<th>
+          			<td>ID</td>
+          			<td>Name</td>
+          		</th>
+          	</thead>
+          	<tbody>
+          		
+          	</tbody>
+          </table>
+        </div> <!-- Modal body-->
+        
+      </div> <!-- Modal header-->
+      
+    </div><!-- Modal content-->
+  </div> 
+</div>  <!-- Modal -->
 
 <script type="text/javascript" src="index.js"></script>
 </body>

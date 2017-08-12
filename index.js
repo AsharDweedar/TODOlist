@@ -155,12 +155,20 @@ function user (){
 
 	return obj;
 }
+
+// for user 
 var showMyTasks = function (){
 	
 }
+//for user 
 var showDeletedTasks = function (){
 
 }
+//for user 
+function changeUserName(){
+	this.name = prompt('type new user name :');
+	$('nav span').text(this.name);
+};
 
 var addUser = function(){
 	var obj = user();
@@ -172,11 +180,51 @@ var addUser = function(){
 	$('nav span').text(obj.name);
 	currentUser = obj ;
 };
+//show 
+function showAllUsers (){
+	allUsers.forEach(function(ele){
+		$('tbody').text('');
+		$('tbody').append('<tr><td>'+ele.id+'</td><td>'+ele.name+'</td></tr>');
+	})
+    $("#myModal").modal();
+}
+// choose a user to delete 
+var deleteUser = function(){
+	var userName;
+	var i ;
+	var userToDelete = prompt('type user id to delete :');
+	allUsers.forEach(function(obj,ind){
+		if (obj.id === userToDelete){
+			userName = obj.name ;
+			i = ind ;
+		}
+	})
+	if (userName !== undefined){
+		var testPassword = prompt('you want to delete '+userName+'type user  password to complete :');
+		if (allUsers[i].pass === testPassword){
+			deleteOneUser(allUsers[i]);
+			alert ('user :'+userName + 'deleted')
+		}
+	} else {
+		alert('user id is not correct !!')
+		showAllUsers();
+	}
+}
 
-function changeUserName(){
-	this.name = prompt('type new user name :');
-	$('nav span').text(this.name);
-};
+
+//delete user object 
+function deleteOneUser (obj){
+	allUsers.forEach(function(object,ind){
+		if (obj.id === object.id){
+			allUsers.splice(ind,1);
+		}
+	})
+}
 
 
 var currentUser = user();
+allUsers.push(currentUser);
+
+
+
+
