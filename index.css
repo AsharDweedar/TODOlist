@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding 0;
+    
+}
+
+
+body {
+	background-image: url("wallup-26163.jpg");
+     background-size:cover;
+    }
+
+#all {
+	background: #e8e7e7;
+    margin :  150px auto;
+/*	margin-top :  50px auto;*/
+	width :  560px;
+/*
+	padding-right: 20px;
+	padding-left: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+*/
+/*    box-shadow: 6px 6px 6px 6px rgba(6, 38, 27, 0.71)*/
+    border: 2px solid #1d5660;
+    
+}
+
+h1{
+    background: #1d5660;
+    color: white;
+    margin: 0;
+    padding: 10px 15px 10px 15px;
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.fa-plus-square {
+    float: right;
+    color: #e8e7e7;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; 
+}
+
+li {
+    background: white;
+    height: 40px;
+/*    line-height: 40px;*/
+    color: #e8e7e7;
+    font-size: 20px;
+    border-top: 2px solid #60868d;
+    overflow: hidden;
+}
+
+/*
+i #imp {
+    float: right;
+    font-weight: 16px
+}
+*/
+
+li:nth-child(even) {
+    background: #e8e7e7;
+}
+
+* {
+    vertical-align: middle;
+}
+
+input {
+  font-size: 18px;
+  background-color: #e8e7e7;
+  width: 100%;
+  padding: 5px 5px 5px 10px;
+  box-sizing: border-box;
+}
+
+input:focus {
+    background: white;
+    border: 3px solid #1d5660;
+    outline: none;
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+/*    overflow: hidden;*/
+    background:  #1d5660;
+    height: 30px;
+    color:white;
+}
+
+span {
+    
+    background: #1d5660;
+    height: 40px;
+    width: 0;
+    margin-right: 20px;
+    text-align: center;
+    color: #e8e7e7;
+    display: inline-block;
+}
+
+li:hover span{
+    width: 40px;
+}
+
+
+.fa-thumbs-o-up {
+    
+    background: #1d5660;
+    height: 40px;
+    width: 0px;
+    margin-left: 20px;
+    text-align: center;
+    color: #e8e7e7;
+    display: inline-block;
+    float: right;
+    
+}
+
+li:hover i.fa-thumbs-o-up {
+    width: 40px;
+}
+
+
+
+#undo {
+    float: right;
+    height: 20px;
+    width: 40px;
+}
+
+.fa-refresh {
+    float: left;
+    height: 20px;
+    width: 40px;
+}
+
+.imp {
+    float:right;
+    font-size: 18px;
+}
+.inComplete {
+	color: #0c272c;
+}
+.completed {
+	color: darkgray;
+    text-decoration: line-through;
+}
+
+footer {
+    border-top: 4px solid #acacac;
+    background: #1d5660;
+    height: 20px;
+}
+
+
+/*
+i{
+	float :  right;
+	margin-right: 30px;
+}
+*/
+#date {
+    width: 50%;
+    padding: 10px;
+    
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 24px;
+    
+    position: fixed;
+    top:20px;
+    left:340px;
+}
