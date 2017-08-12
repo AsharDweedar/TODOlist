@@ -1,6 +1,6 @@
 * {
     margin: 0;
-    padding 0;
+    padding :0;
     vertical-align: middle;    
 }
 
@@ -214,3 +214,6 @@ nav {
     z-index: 999;
 }
 
+#userName {
+     vertical-align:text-bottom;
+}

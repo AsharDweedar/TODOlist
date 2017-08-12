@@ -181,21 +181,26 @@ var addUser = function(){
 	currentUser = obj ;
 };
 //show 
-function showAllUsers (){
+function showAllUsers (func){
+	console.log('show all users functoin')
+	$('tbody').text('');
 	allUsers.forEach(function(ele){
-		$('tbody').text('');
-		$('tbody').append('<tr><td>'+ele.id+'</td><td>'+ele.name+'</td></tr>');
+		$('tbody').append('<tr><td>'+ele.id+'</td><td>'+ele.name+'</td><td><button onclick='+func+'('+$(this)+')>choose me</button></td></tr>');
 	})
     $("#myModal").modal();
 }
 // choose a user to delete 
 var deleteUser = function(){
+	console.log('delete a user ')
 	var userName;
 	var i ;
 	var userToDelete = prompt('type user id to delete :');
+	console.log('userToDelete : ', userToDelete);
 	allUsers.forEach(function(obj,ind){
+		console.log(obj.id , userToDelete)
 		if (obj.id === userToDelete){
 			userName = obj.name ;
+			console.log('userName found : ',userName)
 			i = ind ;
 		}
 	})
@@ -207,20 +212,41 @@ var deleteUser = function(){
 		}
 	} else {
 		alert('user id is not correct !!')
-		showAllUsers();
+		showAllUsers(deleteOneUser);
 	}
 }
 
 
 //delete user object 
 function deleteOneUser (obj){
+	console.log('delete one use : ' , obj)
 	allUsers.forEach(function(object,ind){
-		if (obj.id === object.id){
+		if (obj.id == object.id){
 			allUsers.splice(ind,1);
 		}
 	})
 }
+function search(ID){
+	var obj ;
+	allUsers.forEach(function(object,ind){
+		if (ID == object.id){
+			obj=object;
+		}
+	})
+	return obj ;
+}
 
+function changeCurrentUser(){
+	console.log('changeCurrentUser func')
+	showAllUsers(function(){
+		var testPassword =(prompt('enter password to log in :'));
+		var obj = search($(this).parent().parent().find('td'));
+		if (obj !== undefined){
+			deleteOneUse(obj);
+		}
+		console.log('error')
+	});
+}
 
 var currentUser = user();
 allUsers.push(currentUser);
