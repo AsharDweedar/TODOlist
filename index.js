@@ -128,3 +128,55 @@ $('#undo-all').on('click',function(ev){
 
 })
 
+function idCreator(){
+	var n = 0;
+	function num(){
+		return n ++;
+	}
+	return num;
+}
+var newId = idCreator();
+
+allUsers = [];
+
+
+function user (){
+	var obj = {};
+
+	obj.id = newId();
+	obj.name = 'default';
+	obj.pass = 'password';
+	obj.tasks = [];
+	obj.deletedTasks = [];
+
+	obj.showMyTasks = showMyTasks ;
+	obj.changeUserName = changeUserName;
+	obj.showDeletedTasks = showDeletedTasks;
+
+	return obj;
+}
+var showMyTasks = function (){
+	
+}
+var showDeletedTasks = function (){
+
+}
+
+var addUser = function(){
+	var obj = user();
+
+	obj.name = prompt('type new user name :');
+	obj.pass = prompt('type new password :');
+
+	allUsers.push(obj);
+	$('nav span').text(obj.name);
+	currentUser = obj ;
+};
+
+function changeUserName(){
+	this.name = prompt('type new user name :');
+	$('nav span').text(this.name);
+};
+
+
+var currentUser = user();
