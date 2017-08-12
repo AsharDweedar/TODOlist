@@ -58,7 +58,6 @@ $('ul').on("click","span",function(ev){
 
 function appending(task,importance){
 			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><span class='fa fa-times'></span> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><i class="imp" data-val="'+ importance +'">'+importance+'</i></li>')
-			updateAvg();
 }
 
 
@@ -68,19 +67,20 @@ $(".fa-plus-square").on("click",function(){
 		var importance = $('select').val();
 		$('input[type="text"]').val("");
 		appending(newTask,importance);
+		updateAvg();
 })
 
 
 //reset function
 $('button[type="reset"]').on('click',function(ev){
 	var arr = document.getElementsByTagName('li');
-	console.log('delete arr.length :' ,arr.length);
-	while (arr.length > 0){
-		
-		deleteMe($('#allList li:first-child'));
-		//console.log('delete element ', del);
-		//console.log('typeof element ',typeof del);
-		arr = document.getElementsByTagName('li');
+	var numOfEle = arr.length ;
+	console.log('delete arr.length :' , numOfEle);
+	while (numOfEle > 0){
+		var del = $('#allList li:first-child');
+		console.log('delete element ', del);
+		deleteMe(del);
+		numOfEle--;
 	}
 	updateAvg();
 	ev.stopPropagation();	
@@ -96,6 +96,7 @@ function restore (){
 	} else {
 		alert("nothing to undo");
 	}
+	updateAvg();
 }
 
 // undo delete function 
