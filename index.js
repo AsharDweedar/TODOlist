@@ -2,6 +2,19 @@
 var deleted= [];
 
 
+$('.fa-cog').on('click',function () {
+	console.log('showing the side bar')
+	
+	$('aside').toggle(
+	function() {
+	    $(this).css('left', '0')
+	}, function() {
+	    $(this).css('left', '0')
+	})
+//	ev.stopPropagation();
+})
+
+
 // time display function 
 setInterval( function(){
     var months = [    'January','February','March'    ,'April'    ,'May'    ,'June'    ,'July',    'August',    'September'    ,'October',    'November'    ,'December']

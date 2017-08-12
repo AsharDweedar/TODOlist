@@ -183,3 +183,34 @@ i{
     top:20px;
     left : 300px ;
 }
+
+aside {
+    width : 200px;
+    float: left ;
+    height: 100vh;
+    background: #acacac;
+    position: fixed;
+    top: 0;
+    left: -200px;
+}
+ins {
+    text-decoration :  none;
+    display: block;
+    width: 150px;
+    padding: 10px; 
+    margin-top: 20px;
+    border: 1px solid #1d5660;
+    box-shadow: 3px 3px 15px 5px ;
+}
+
+nav {
+    background: #1d5660 ;
+    padding: 10px ;
+    box-shadow: 3px 3px 15px 5px ;
+    border-bottom-right-radius: 15px ;
+    border-top-right-radius: 15px ;
+    position: fixed;
+    top: 10px;
+    z-index: 999;
+}
+
