@@ -1,20 +1,8 @@
-/*console.log('hello');
-function changeTaskDecoration() {
-	console.log('hi')
-	if ($(this).parent().css('fontWeight') !==  'bold') {
-		console.log('if ')
-		$(this).css('fontWeight' ,'bold');
-	} else {
-		console.log('else')
-		$(this).css('fontWeight' , 'normal');
-		$(this).css('color' , 'blue');
-	}
-}*/
 
 var deleted= [];
 
 
-
+// time display function 
 setInterval( function(){
     var months = [    'January','February','March'    ,'April'    ,'May'    ,'June'    ,'July',    'August',    'September'    ,'October',    'November'    ,'December']
     var date = new Date();
@@ -33,6 +21,7 @@ var updateAvg = function  (){
     
 
 
+// done tasks function
 
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	$(this).parent().toggleClass('completed');
@@ -45,47 +34,68 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 	updateAvg();
 });
 
-
-$('ul').on("click","span",function (ev){
-	$(this).parent().fadeOut(500,function(){ 
-		deleted.push( { value: $(this).data('val') ,  importance: $(this).find('i.imp').data('val')  } );
-		if ($(this).hasClass('completed')){
+// delete function 
+function deleteMe ($dele){
+	console.log('delete function passed value ',$dele);
+	console.log('delete function: ' ,$dele.data('val'),$dele.find('i.imp').data('val'))
+	deleted.push( { value: $dele.data('val') ,  importance: $dele.find('i.imp').data('val')  } );
+		if ($dele.hasClass('completed')){
 			doneTasks -- ;
 		}
-		$(this).remove();
-
+		$dele.remove();
 		updateAvg();
-	})
-	
+}
+
+
+// delete  event 
+$('ul').on("click","span",function(ev){
+	console.log('to delete event : ', $(this).parent());
+	$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
 	ev.stopPropagation();
 });
+
+
 
 function appending(task,importance){
 			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><span class='fa fa-times'></span> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><i class="imp" data-val="'+ importance +'">'+importance+'</i></li>')
 			updateAvg();
 }
 
-$(".fa-plus-square").on("click",function(){
 
+//  add task function 
+$(".fa-plus-square").on("click",function(){
 		var newTask = $('input[type="text"]').val()
 		var importance = $('select').val();
 		$('input[type="text"]').val("");
 		appending(newTask,importance);
 })
 
+
+//reset function
 $('button[type="reset"]').on('click',function(ev){
-	$('ul').text('');
+	var arr = document.getElementsByTagName('li');
+	console.log('delete arr.length :' ,arr.length);
+	while (arr.length > 0){
+		
+		deleteMe($('#allList li:first-child'));
+		//console.log('delete element ', del);
+		//console.log('typeof element ',typeof del);
+		arr = document.getElementsByTagName('li');
+	}
+	updateAvg();
+	ev.stopPropagation();	
 })
 
 
+// undo delete function 
 $('#undo').on('click',function(){
-    
 	if(deleted.length !== 0 ){
+		console.log('undo delete : ', deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance )
 		appending(deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance );
 		deleted.pop();
 	} else {
 		alert("nothing to undo");
 	}
+	
 })
-
 

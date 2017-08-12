@@ -14,32 +14,33 @@
 <div id="date"></div>
     
 	<div id='all'>
-	<h1>My To Do List <i class="fa fa-plus-square" ></i></h1>
-	<input type="text" placeholder="Add New ToDo">
-	
-	 <!--<input type="date" id="party" name="party" min="2017-04-01" max="2017-04-20" required>-->
-     <div>
-	 <select class = "select-style">
-	  <option value="important">important</option>
-	  <option value="normal">normal</option>
-	  <option value="low">low</option>
-	</select> 
-	<section id='sec'>
-		<div>you finished : 0 / 1 of your tasks .</div>
-	    </section>
-     </div>
+		<h1>My To Do List <i class="fa fa-plus-square" ></i></h1>
+		<input type="text" placeholder="Add New ToDo">
+		
+	    <div>
+		 	<select class = "select-style">
+		 		<optgroup>
+					<option value="important">important</option>
+					<option value="normal">normal</option>
+					<option value="low">low</option>
+				</optgroup>
+			</select> 
+			<section id='sec'>
+				<div>you finished : 0 / 1 of your tasks .</div>
+		    </section>
+	    </div>
 
-	<ul >
-		<li class='inComplete' data-val= ' my list '><span class="fa fa-times"></span> my list <i class = "fa fa-thumbs-o-up"> </i>  <i class="imp" data-val="important">important</i></li>
-        
-	</ul>
+		<ul id='allList'>
+			<li class='inComplete' data-val='first task is here'><span class="fa fa-times"></span>first task is here<i class = "fa fa-thumbs-o-up"> </i>  <i class="imp" data-val="important">important</i></li>
+	        
+		</ul>
 
 
-	<footer>
-        
-		<button type='reset' class='fa fa-refresh'> </button>
-		<button id='undo' class="fa fa-undo" > </button>
-        
+		<footer>
+	        
+			<button type='reset' class='fa fa-refresh'> </button>
+			<button id='undo' class="fa fa-undo" > </button>
+	        
 		</footer>
         
 	</div>
