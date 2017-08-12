@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding 0;
-    
+    vertical-align: middle;    
 }
 
 
@@ -68,10 +68,6 @@ li:nth-child(even) {
     background: #e8e7e7;
 }
 
-* {
-    vertical-align: middle;
-}
-
 input {
   font-size: 18px;
   background-color: #e8e7e7;
@@ -110,8 +106,11 @@ span {
 li:hover span{
     width: 40px;
 }
-
-
+/* 
+i::after{
+    vertical-align: center;
+}
+ */
 .fa-thumbs-o-up {
     
     background: #1d5660;
@@ -133,14 +132,19 @@ li:hover i.fa-thumbs-o-up {
 
 #undo {
     float: right;
-    height: 20px;
-    width: 40px;
+    height: 40px;
+    /* width: 40px; */
 }
 
 .fa-refresh {
     float: left;
-    height: 20px;
-    width: 40px;
+    height: 40px;
+    /* width: 40px; */
+}
+.fa-angle-double-right {
+    float: right;
+    height: 40px;
+   /*  width: 40px; */
 }
 
 .imp {
@@ -158,7 +162,7 @@ li:hover i.fa-thumbs-o-up {
 footer {
     border-top: 4px solid #acacac;
     background: #1d5660;
-    height: 20px;
+    height: 40px;
 }
 
 
@@ -171,13 +175,11 @@ i{
 #date {
     width: 50%;
     padding: 10px;
-    
     text-align: center;
     text-decoration: none;
     font-weight: bold;
     font-size: 24px;
-    
     position: fixed;
     top:20px;
-    left:340px;
+    left : 300px ;
 }

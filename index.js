@@ -87,8 +87,8 @@ $('button[type="reset"]').on('click',function(ev){
 })
 
 
-// undo delete function 
-$('#undo').on('click',function(){
+
+function restore (){
 	if(deleted.length !== 0 ){
 		console.log('undo delete : ', deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance )
 		appending(deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance );
@@ -96,6 +96,21 @@ $('#undo').on('click',function(){
 	} else {
 		alert("nothing to undo");
 	}
-	
+}
+
+// undo delete function 
+$('#undo').on('click',function(ev){
+	restore();
+	ev.stopPropagation();
+})
+
+$('#undo-all').on('click',function(ev){
+	console.log('restoring :' , deleted.length , ' items');
+	while (deleted.length > 0){
+		restore();
+	}
+	updateAvg();
+	ev.stopPropagation();	
+
 })
 
