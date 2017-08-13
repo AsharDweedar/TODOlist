@@ -180,14 +180,18 @@ var addUser = function(){
 	obj.pass = prompt('type new password :');
 
 	allUsers.push(obj);
-	$('nav span').text(obj.name);
-	currentUser = obj ;
+	setUser(obj) ;
 };
 
 
+// change Current User
+var setUser = function (obj){
+	currentUser = obj ;
+	$('nav span').text(currentUser.name);
+}
 
 
-//show 
+//show modal of all users  
 function showAllUsers (func){
 	console.log('show all users functoin')
 	$('tbody').text('');
@@ -197,16 +201,13 @@ function showAllUsers (func){
     $("#myModal").modal();
 }
 
+
+// the delete function 
 $('tbody').on('click','.toDelete',function(){
 	console.log('the delete function')
-			var testPassword =prompt('enter password to log in :');/*
-			console.log($(this).parent())
-			console.log($(this).parent().parent())*/
-			console.log(typeof $(this).parent().parent().data('val'))
+			var testPassword =prompt('enter password to log in :');
 			var index = (search($(this).parent().parent().data('val'),1));
-			console.log(index)
 			if (index !== undefined){
-				console.log('index is found ')
 				if (allUsers[index].pass === testPassword ){
 					allUsers.splice(index,1);
 				} else {
@@ -216,37 +217,13 @@ $('tbody').on('click','.toDelete',function(){
 				console.log('error');
 			}
 })
-/*var toDelete = function (){
-			
-			//ev.stopPropagation();
-		}
-*/
+
+
+
 // choose a user to delete 
-var deleteUser = function(){/*
-	console.log('delete a user ')
-	
-	var userToDelete = prompt('type user id to delete :');
-	console.log('userToDelete : ', userToDelete);
-
-	var i = search(JSON.parse(userToDelete),1);
-	
-
-	if (i != undefined){
-		var userName = allUsers[i].name;
-		console.log('userName found : ',userName)
-		var testPassword = prompt('you want to delete '+userName+'type user  password to complete :');
-		if (allUsers[i].pass === testPassword){
-			allUsers.splice(ind,1);
-			alert ('user :'+userName + 'deleted')
-		}
-	} else {
-*/
-		// if user wasn't found modal will show up to choose one to delete 
-
-		//alert('user id is not correct !!')
+var deleteUser = function(){
 
 		showAllUsers("toDelete");
-	//} //close of else 
 }
 
 
@@ -255,12 +232,9 @@ function search(ID,i){
 	var returnMe ;
 	console.log('search function for id :' , ID);
 		allUsers.forEach(function(object,ind){
-			console.log(typeof object.id , object.id)
-			console.log(typeof ID, ID);
 			if (ID === object.id){
 				console.log('object found at index ',ind)
 				if (i !== undefined){
-					console.log('to return index');
 					returnMe = ind;
 				} else {
 					returnMe = object ;
@@ -270,32 +244,30 @@ function search(ID,i){
 	return returnMe ;
 }
 
-
-function changeUser (){
+$('tbody').on('click','.changeUser',function(){
 		console.log('the change user function ..')
 		var testPassword =(prompt('enter password to log in :'));
-		var obj = search($(this).parent().parent().find('td'));
+		var obj = search($(this).parent().parent().data('val'));
 		if (obj !== undefined){
 			if (obj.pass === testPassword ){
-				currentUser = obj;
+				setUser(obj);
 			} else {
 			alert("passwords didn't match");
 			}
 		} else { 
 			console.log('error');
 		}
-		//ev.stopPropagation();
-	}
+})
+
+
 //change current user 
 function changeCurrentUser(ev){
 	console.log('changeCurrentUser func')
-
-	
-
 	showAllUsers("changeUser");
 }
 
+
+
 var currentUser = user();
 allUsers.push(currentUser);
-$('nav span').text(  currentUser.name);
-
+setUser(currentUser)
