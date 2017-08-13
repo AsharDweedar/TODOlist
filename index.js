@@ -162,13 +162,22 @@ function user (){
 	return obj;
 }
 
+var showTasks = function (arr) {
+	$('#allList').text('');
+	for (var i=0 ; i < arr.length ; i++){
+		appending( arr[i].task , arr[i].importance );
+	}
+}
+
 // for user 
 var showMyTasks = function (){
-	
+	$('#all>h1').removeClass('deletedMode')
+	showTasks(currentUser.tasks );
 }
 //for user 
 var showDeletedTasks = function (){
-
+	$('#all>h1').addClass('deletedMode')
+	showTasks(currentUser.deletedTasks );
 }
 //for user 
 function changeUserName(){
@@ -193,6 +202,9 @@ var addUser = function(){
 // change Current User
 var setUser = function (obj){
 	currentUser = obj ;
+
+	showMyTasks();
+
 	$('nav span').text(currentUser.name);
 }
 
