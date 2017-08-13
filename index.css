@@ -202,8 +202,20 @@ ins {
     border: 1px solid #1d5660;
     box-shadow: 3px 3px 15px 5px ;
 }
+nav >span {
+    padding-right: 40px ;
+    padding-top: 5px ;
+    padding-bottom:  5px ;
+    position: fixed;
+    top: 10px;
+    z-index: 998;
+    border-bottom-right-radius: 15px ;
+    border-top-right-radius: 15px ;
+    height: 30px;
 
-nav {
+}
+
+nav  {
     background: #1d5660 ;
     padding-right: 40px ;
     padding-top: 5px ;
@@ -214,4 +226,6 @@ nav {
     position: fixed;
     top: 10px;
     z-index: 999;
+    height: 30px;
+    width: 150px;
 }
