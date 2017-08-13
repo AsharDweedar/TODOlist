@@ -1,5 +1,5 @@
 
-var deleted= [];
+//var deleted= [];
 
 
 $('.fa-cog').on('click',function () {
@@ -24,10 +24,10 @@ setInterval( function(){
 
 
 
-var doneTasks = 0;
+//var doneTasks = 0;
 var updateAvg = function  (){
 	var all = document.getElementsByTagName('li').length;
-	var avg = doneTasks+"/"+all;
+	var avg = currentUser.doneTasks+"/"+all;
 	$('#sec').html("<div>you finished : " + avg +" of your tasks .</div>")
 }
 
@@ -39,9 +39,9 @@ var updateAvg = function  (){
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	$(this).parent().toggleClass('completed');
 	if ($(this).parent().hasClass('completed')){
-		doneTasks++;
+		currentUser.doneTasks++;
 	} else {
-		doneTasks--;
+		currentUser.doneTasks--;
 	}
 	
 	updateAvg();
@@ -50,10 +50,10 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 // delete function 
 function deleteMe ($dele){
 	console.log('delete function passed value ',$dele);
-	console.log('delete function: ' ,$dele.data('val'),$dele.find('i.imp').data('val'))
-	deleted.push( { value: $dele.data('val') ,  importance: $dele.find('i.imp').data('val')  } );
+	console.log('delete function: ' ,$dele.data('val')  ,   $dele.find('i.imp').data('val'))
+	currentUser.deletedTasks.push( { task: $dele.data('val') ,  importance: $dele.find('i.imp').data('val')  } );
 		if ($dele.hasClass('completed')){
-			doneTasks -- ;
+			currentUser.doneTasks -- ;
 		}
 		$dele.remove();
 		updateAvg();
@@ -78,6 +78,7 @@ function appending(task,importance){
 $(".fa-plus-square").on("click",function(){
 		var newTask = $('input[type="text"]').val()
 		var importance = $('select').val();
+		currentUser.tasks.push({ task : newTask , importance : importance })
 		$('input[type="text"]').val("");
 		appending(newTask,importance);
 		updateAvg();
@@ -101,26 +102,28 @@ $('button[type="reset"]').on('click',function(ev){
 
 
 
-function restore (){
+function restore (task , importance ){
+	var deleted = currentUser.deletedTasks ;
 	if(deleted.length !== 0 ){
-		console.log('undo delete : ', deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance )
-		appending(deleted[deleted.length-1].value.split('-').join(' ') ,deleted[deleted.length-1].importance );
+		console.log('undo delete : ', deleted[deleted.length-1].task.split('-').join(' ') ,deleted[deleted.length-1].importance )
+		currentUser.tasks.push(  {  task : deleted[deleted.length-1].task.split('-').join(' ') ,importance : deleted[deleted.length-1].importance  }  )
+		appending(deleted[deleted.length-1].task.split('-').join(' ') ,deleted[deleted.length-1].importance );
 		deleted.pop();
 	} else {
 		alert("nothing to undo");
 	}
-	updateAvg();
 }
 
 // undo delete function 
 $('#undo').on('click',function(ev){
 	restore();
+	updateAvg();
 	ev.stopPropagation();
 })
 
 $('#undo-all').on('click',function(ev){
-	console.log('restoring :' , deleted.length , ' items');
-	while (deleted.length > 0){
+	console.log('restoring :' , currentUser.deletedTasks.length , ' items');
+	while (currentUser.deletedTasks.length > 0){
 		restore();
 	}
 	updateAvg();
@@ -143,11 +146,14 @@ allUsers = [];
 function user (){
 	var obj = {};
 
+	obj.newTasksId = idCreator();
+
 	obj.id = newId();
 	obj.name = 'default';
 	obj.pass = 'password';
 	obj.tasks = [];
 	obj.deletedTasks = [];
+	obj.doneTasks = 0;
 
 	obj.showMyTasks = showMyTasks ;
 	obj.changeUserName = changeUserName;
