@@ -78,7 +78,13 @@ function deleteMe ($dele){
 // delete  event 
 $('ul').on("click","span",function(ev){
 	console.log('to delete event : ', $(this).parent());
-	$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
+
+	if ( $('h1').hasClass('deletedMode') ){
+		restore ($(this).parent().data('val').split('-').join(' ') ,$(this).parent().find('i.imp').data('val')  )
+	} else {
+		$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
+	}
+
 	ev.stopPropagation();
 });
 
@@ -89,15 +95,18 @@ function appending(task,importance){
 }
 
 
+
 //  add task function 
-$(".fa-plus-square").on("click",function(){
-		var newTask = $('input[type="text"]').val()
-		var importance = $('select').val();
-		currentUser.tasks.push({ task : newTask , importance : importance })
+$(".fa-plus-square").on("click",function () {
+	var newTask = $('input[type="text"]').val() ;
+	var importance =  $('select').val() ;
+
+	currentUser.tasks.push({ task : newTask , importance : importance })
 		$('input[type="text"]').val("");
 		appending(newTask,importance);
 		updateAvg();
-})
+
+});
 
 
 //reset function
@@ -121,11 +130,11 @@ function restore (task , importance ){
 	console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
 	var taskObj =  {  task :task ,importance : importance  };
-	if(deleted.length !== 0 ){
-		console.log('undo delete : ', taskObj )
+		console.log('restor : ', taskObj )
 		currentUser.tasks.push(  taskObj  )
-		appending(taskObj.task , taskObj.importance );
-
+		if (! ($('h1').hasClass('deletedMode'))  ){
+			appending(taskObj.task , taskObj.importance );
+		}
 
 		// this should be merged with search function and deleted later 
 		// this is to get the deleted tasks out of tasks arr ;
@@ -137,18 +146,19 @@ function restore (task , importance ){
 			}
 		}
 
-
-
 		currentUser.deletedTasks.splice( k,1 );
-	} else {
-		alert("nothing to undo");
-	}
+		showDeletedTasks();
 }
 
 // undo delete function 
 $('#undo').on('click',function(ev){
 	console.log('undo event ')
 	var deleted = currentUser.deletedTasks ;
+	if (deleted.length === 0 ){
+		alert ('nothing to undo')
+		return 'nothing to undo'
+	}
+
 	restore( deleted[deleted.length-1].task , deleted[deleted.length-1].importance  );
 	updateAvg();
 	ev.stopPropagation();
@@ -207,16 +217,25 @@ var showTasks = function (arr) {
 
 // for user 
 var showMyTasks = function (){
-	console.log('show my tasks function')
-	$('#all>h1').removeClass('deletedMode')
+	console.log('show my tasks function');
+	$('#all>h1 , footer ').removeClass('deletedMode');
+	$('select , footer button, #sec , #adder ').show();
+	$('li>span').toggleClass('fa-times');
+	$('li>span').html('');
 	showTasks(currentUser.tasks );
+	$('li:hover i.fa-thumbs-o-up , li:hover span').css('width','40px');
 	updateAvg();
 }
 //for user 
 var showDeletedTasks = function (){
-	console.log('show deleted tasks function')
-	$('#all>h1').addClass('deletedMode')
+	console.log('show deleted tasks function');
+	$('#all>h1 , footer').addClass('deletedMode');
+	$('select , footer button , #sec , #adder ').hide();
+	$('li>span').toggleClass('fa-times');
+	$('li>span').html('restor me');
+	$('#undo-all').show();
 	showTasks(currentUser.deletedTasks );
+	$('li:hover i.fa-thumbs-o-up , li:hover span').css('width','0');
 }
 //for user 
 function changeUserName(){

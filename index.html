@@ -37,7 +37,7 @@
     
 	<div id='all'>
 		<h1>My To Do List <i class="fa fa-plus-square" ></i></h1>
-		<input type="text" placeholder="Add New ToDo">
+		<input id='adder' type="text" placeholder="Add New ToDo">
 		
 	    <div>
 		 	<select class = "select-style">
@@ -53,7 +53,7 @@
 	    </div>
 
 		<ul id='allList'>
-			<li class='inComplete' data-val='first task is here'><span class="fa fa-times"></span>first task is here<i class = "fa fa-thumbs-o-up"> </i>  <i class="imp" data-val="important">important</i></li>
+			<li class='inComplete' data-val='first-task-is-here'><span class="fa fa-times"></span>first task is here<i class = "fa fa-thumbs-o-up"> </i>  <i class="imp" data-val="important">important</i></li>
 	        
 		</ul>
 
@@ -62,7 +62,7 @@
 	        
 			<button type='reset' class='fa fa-refresh'>	reset</button>
 			<button id='undo' class="fa fa-undo" > undo</button>
-	        <button id='undo-all' class="fa fa-angle-double-right"> undo all</button>
+	        <button id='undo-all' class="fa fa-angle-double-right"> restore all</button>
 
 		</footer>
          <!--aria-hidden="true"-->

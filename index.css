@@ -103,9 +103,7 @@ span {
     display: inline-block;
 }
 
-li:hover span{
-    width: 40px;
-}
+
 /* 
 i::after{
     vertical-align: center;
@@ -124,9 +122,9 @@ i::after{
     
 }
 
-li:hover i.fa-thumbs-o-up {
+/* li:hover i.fa-thumbs-o-up , li:hover span {
     width: 40px;
-}
+} */
 
 
 
@@ -201,6 +199,8 @@ ins {
     margin-top: 20px;
     border: 1px solid #1d5660;
     box-shadow: 3px 3px 15px 5px ;
+    background: #1d5660;
+    color: #acacac;
 }
 nav >span {
     padding-right: 40px ;
@@ -228,9 +228,13 @@ nav  {
     z-index: 999;
     height: 30px;
     width: 150px;
+    color: #acacac;
 }
 
 .deletedMode {
     background: red ;
-    color: white ;
+    /* color: white ; */
+}
+.hidden {
+
 }
