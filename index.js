@@ -49,9 +49,24 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 
 // delete function 
 function deleteMe ($dele){
-	console.log('delete function passed value ',$dele);
-	console.log('delete function: ' ,$dele.data('val')  ,   $dele.find('i.imp').data('val'))
-	currentUser.deletedTasks.push( { task: $dele.data('val') ,  importance: $dele.find('i.imp').data('val')  } );
+
+	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('i.imp').data('val')  }  
+	console.log('delete function: ' , deletedTask )
+	currentUser.deletedTasks.push( deletedTask );
+
+
+	// this should be merged with search function and deleted later 
+	// this is to get the deleted tasks out of tasks arr ;
+	var k ;
+	for ( k=0;k<currentUser.tasks.length ; k++){
+		if (JSON.stringify(deletedTask) === JSON.stringify(currentUser.tasks[k])){
+			break;
+		}
+	}
+
+
+	currentUser.tasks.splice(k , 1 );
+
 		if ($dele.hasClass('completed')){
 			currentUser.doneTasks -- ;
 		}
@@ -103,12 +118,28 @@ $('button[type="reset"]').on('click',function(ev){
 
 
 function restore (task , importance ){
+	console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
+	var taskObj =  {  task :task ,importance : importance  };
 	if(deleted.length !== 0 ){
-		console.log('undo delete : ', deleted[deleted.length-1].task.split('-').join(' ') ,deleted[deleted.length-1].importance )
-		currentUser.tasks.push(  {  task : deleted[deleted.length-1].task.split('-').join(' ') ,importance : deleted[deleted.length-1].importance  }  )
-		appending(deleted[deleted.length-1].task.split('-').join(' ') ,deleted[deleted.length-1].importance );
-		deleted.pop();
+		console.log('undo delete : ', taskObj )
+		currentUser.tasks.push(  taskObj  )
+		appending(taskObj.task , taskObj.importance );
+
+
+		// this should be merged with search function and deleted later 
+		// this is to get the deleted tasks out of tasks arr ;
+		var k ;
+		for ( k=0;k<deleted.length ; k++){
+			if (JSON.stringify(taskObj) === JSON.stringify(deleted[k])){
+				console.log('found :', taskObj , 'at k = ' , k)
+				break;
+			}
+		}
+
+
+
+		currentUser.deletedTasks.splice( k,1 );
 	} else {
 		alert("nothing to undo");
 	}
@@ -116,15 +147,20 @@ function restore (task , importance ){
 
 // undo delete function 
 $('#undo').on('click',function(ev){
-	restore();
+	console.log('undo event ')
+	var deleted = currentUser.deletedTasks ;
+	restore( deleted[deleted.length-1].task , deleted[deleted.length-1].importance  );
 	updateAvg();
 	ev.stopPropagation();
 })
 
+
+// undo all event 
 $('#undo-all').on('click',function(ev){
-	console.log('restoring :' , currentUser.deletedTasks.length , ' items');
-	while (currentUser.deletedTasks.length > 0){
-		restore();
+	var deleted = currentUser.deletedTasks ;
+	console.log('restoring :' , deleted.length , ' items');
+	while (deleted.length > 0){
+		restore(deleted[deleted.length-1].task , deleted[deleted.length-1].importance);
 	}
 	updateAvg();
 	ev.stopPropagation();	
@@ -151,7 +187,7 @@ function user (){
 	obj.id = newId();
 	obj.name = 'default';
 	obj.pass = 'password';
-	obj.tasks = [];
+	obj.tasks = [{task : 'the first task is here' , importance : 'important'}];
 	obj.deletedTasks = [];
 	obj.doneTasks = 0;
 
@@ -163,7 +199,7 @@ function user (){
 }
 
 var showTasks = function (arr) {
-	$('#allList').text('');
+	$('#allList').html('');
 	for (var i=0 ; i < arr.length ; i++){
 		appending( arr[i].task , arr[i].importance );
 	}
@@ -171,11 +207,14 @@ var showTasks = function (arr) {
 
 // for user 
 var showMyTasks = function (){
+	console.log('show my tasks function')
 	$('#all>h1').removeClass('deletedMode')
 	showTasks(currentUser.tasks );
+	updateAvg();
 }
 //for user 
 var showDeletedTasks = function (){
+	console.log('show deleted tasks function')
 	$('#all>h1').addClass('deletedMode')
 	showTasks(currentUser.deletedTasks );
 }
@@ -224,7 +263,7 @@ function showAllUsers (func){
 $('tbody').on('click','.toDelete',function(){
 	console.log('the delete function')
 			var testPassword =prompt('enter password to log in :');
-			var index = (search($(this).parent().parent().data('val'),1));
+			var index = (search(allUsers , $(this).parent().parent().data('val'),1));
 			if (index !== undefined){
 				if (allUsers[index].pass === testPassword ){
 					allUsers.splice(index,1);
@@ -240,16 +279,17 @@ $('tbody').on('click','.toDelete',function(){
 
 // choose a user to delete 
 var deleteUser = function(){
-
+		console.log('delete user event ')
 		showAllUsers("toDelete");
 }
 
 
-//search uding id , if i is passed return index , else return the object 
-function search(ID,i){
+//search using id , if i is passed return index , else return the object 
+//reseve arr of obj with key called id 
+function search(arr , ID,i){
 	var returnMe ;
 	console.log('search function for id :' , ID);
-		allUsers.forEach(function(object,ind){
+		arr.forEach(function(object,ind){
 			if (ID === object.id){
 				console.log('object found at index ',ind)
 				if (i !== undefined){
@@ -265,7 +305,7 @@ function search(ID,i){
 $('tbody').on('click','.changeUser',function(){
 		console.log('the change user function ..')
 		var testPassword =(prompt('enter password to log in :'));
-		var obj = search($(this).parent().parent().data('val'));
+		var obj = search(allUsers , $(this).parent().parent().data('val'));
 		if (obj !== undefined){
 			if (obj.pass === testPassword ){
 				setUser(obj);
