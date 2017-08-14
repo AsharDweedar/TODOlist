@@ -19,7 +19,7 @@ $('.fa-cog').on('click',function () {
 setInterval( function(){
     var months = [    'January','February','March'    ,'April'    ,'May'    ,'June'    ,'July',    'August',    'September'    ,'October',    'November'    ,'December']
     var date = new Date();
-    $('#date').text(date.getDay()+ ' ' +months[date.getMonth()]+ ' ' +date.getFullYear()+' => ' + date.getHours()+' : ' +date.getMinutes()+' : ' + date.getSeconds());
+    $('#date').text(date.getDay()+ ' ' +months[date.getMonth()]+ ' ' +date.getFullYear()+ ' / ' + date.getHours()+' : ' +date.getMinutes()+' : ' + date.getSeconds());
 },1000)
 
 
@@ -37,14 +37,18 @@ var updateAvg = function  (){
 // done tasks function
 
 $('ul').on("click",'.fa-thumbs-o-up',function(){
-	$(this).parent().toggleClass('completed');
-	if ($(this).parent().hasClass('completed')){
-		currentUser.doneTasks++;
+	if  ($('h1').hasClass('deletedMode')) {
+		alert('restore item to mark as completed')
 	} else {
-		currentUser.doneTasks--;
+		$(this).parent().toggleClass('completed');
+		if ($(this).parent().hasClass('completed')){
+			currentUser.doneTasks++;
+		} else {
+			currentUser.doneTasks--;
+		}
+		
+		updateAvg();
 	}
-	
-	updateAvg();
 });
 
 // delete function 
@@ -132,9 +136,7 @@ function restore (task , importance ){
 	var taskObj =  {  task :task ,importance : importance  };
 		console.log('restor : ', taskObj )
 		currentUser.tasks.push(  taskObj  )
-		if (! ($('h1').hasClass('deletedMode'))  ){
-			appending(taskObj.task , taskObj.importance );
-		}
+		
 
 		// this should be merged with search function and deleted later 
 		// this is to get the deleted tasks out of tasks arr ;
@@ -147,7 +149,11 @@ function restore (task , importance ){
 		}
 
 		currentUser.deletedTasks.splice( k,1 );
-		showDeletedTasks();
+		if (! ($('h1').hasClass('deletedMode'))  ){
+			appending(taskObj.task , taskObj.importance );
+		} else {
+			showDeletedTasks();
+		}
 }
 
 // undo delete function 
@@ -219,23 +225,26 @@ var showTasks = function (arr) {
 var showMyTasks = function (){
 	console.log('show my tasks function');
 	$('#all>h1 , footer ').removeClass('deletedMode');
-	$('select , footer button, #sec , #adder ').show();
-	$('li>span').toggleClass('fa-times');
-	$('li>span').html('');
+	$('select , footer button, #sec , #adder  ,h1 i').show();
+	$('li span').toggleClass('fa-times');
+	$('li span').html('');
+	$('h1').css('text-align','left');
 	showTasks(currentUser.tasks );
-	$('li:hover i.fa-thumbs-o-up , li:hover span').css('width','40px');
+	/*$('li span').css('width','0px');*/
 	updateAvg();
 }
 //for user 
 var showDeletedTasks = function (){
 	console.log('show deleted tasks function');
 	$('#all>h1 , footer').addClass('deletedMode');
-	$('select , footer button , #sec , #adder ').hide();
-	$('li>span').toggleClass('fa-times');
-	$('li>span').html('restor me');
+	$('select , footer button , #sec , #adder ,h1 i').hide();
+	/*$('li span').toggleClass('fa-times');*/
+	$('h1').css('text-align','center');
+	$('li span').html('restor me');
+	$('li span').css('width','40px');
 	$('#undo-all').show();
 	showTasks(currentUser.deletedTasks );
-	$('li:hover i.fa-thumbs-o-up , li:hover span').css('width','0');
+	/*.fa-thumbs-o-up*/
 }
 //for user 
 function changeUserName(){
@@ -280,17 +289,22 @@ function showAllUsers (func){
 
 // the delete function 
 $('tbody').on('click','.toDelete',function(){
-	console.log('the delete function')
-			var testPassword =prompt('enter password to log in :');
+	console.log('the delete user function');
+	if ($(this).parent().parent().data('val') === currentUser.id){
+		alert('you can\'t delete current user ');
+		return 'un-allowed attempt';
+	}
+			var testPassword =prompt('enter password for chosen user  :');
 			var index = (search(allUsers , $(this).parent().parent().data('val'),1));
 			if (index !== undefined){
 				if (allUsers[index].pass === testPassword ){
 					allUsers.splice(index,1);
+					showAllUsers( 'toDelete' );
 				} else {
 				alert("passwords didn't match");
 				}
 			} else { 
-				console.log('error');
+				console.log('error, user not found');
 			}
 })
 

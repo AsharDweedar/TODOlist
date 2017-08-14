@@ -122,9 +122,9 @@ i::after{
     
 }
 
-/* li:hover i.fa-thumbs-o-up , li:hover span {
+ li:hover i.fa-thumbs-o-up , li:hover span {
     width: 40px;
-} */
+}  
 
 
 
@@ -148,6 +148,7 @@ i::after{
 .imp {
     float:right;
     font-size: 18px;
+    margin-top: 7px;
 }
 .inComplete {
 	color: #0c272c;
@@ -202,7 +203,7 @@ ins {
     background: #1d5660;
     color: #acacac;
 }
-nav >span {
+nav > span {
     padding-right: 40px ;
     padding-top: 5px ;
     padding-bottom:  5px ;
@@ -235,6 +236,11 @@ nav  {
     background: red ;
     /* color: white ; */
 }
-.hidden {
+#sec {
+    float: right;
+    padding: 5px;
+}
 
+::before {
+    padding : 10px;
 }
