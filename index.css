@@ -161,7 +161,7 @@ i::after{
 footer {
     border-top: 4px solid #acacac;
     background: #1d5660;
-    height: 40px;
+    height: 42px;
 }
 
 
@@ -243,4 +243,12 @@ nav  {
 
 ::before {
     padding : 10px;
+}
+
+.modal-header {
+    background: #acacac ;
+}
+
+td {
+    margin: 10px ;
 }

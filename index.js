@@ -1,7 +1,4 @@
 
-//var deleted= [];
-
-
 $('.fa-cog').on('click',function () {
 	console.log('showing the side bar')
 	
@@ -17,7 +14,7 @@ $('.fa-cog').on('click',function () {
 
 // time display function 
 setInterval( function(){
-    var months = [    'January','February','March'    ,'April'    ,'May'    ,'June'    ,'July',    'August',    'September'    ,'October',    'November'    ,'December']
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
     var date = new Date();
     $('#date').text(date.getDay()+ ' ' +months[date.getMonth()]+ ' ' +date.getFullYear()+ ' / ' + date.getHours()+' : ' +date.getMinutes()+' : ' + date.getSeconds());
 },1000)
@@ -281,11 +278,12 @@ function showAllUsers (func){
 	console.log('show all users functoin')
 	$('tbody').text('');
 	allUsers.forEach(function(ele){
-		$('tbody').append('<tr data-val="'+ele.id+'"><td >'+ele.id+'</td><td>'+ele.name+'</td><td><button class="'+func+'">choose me</button></td></tr>');
+		$('tbody').append('<tr data-val=" '+ele.id+' "><td > '+ele.id+' </td><td> '+ele.name+' </td><td><button class="'+func+'"> choose me </button></td></tr>');
 	})
+	
     $("#myModal").modal();
 }
-
+$('td').css('margin','10px')
 
 // the delete function 
 $('tbody').on('click','.toDelete',function(){
