@@ -214,6 +214,10 @@ function user (){
 }
 
 var showTasks = function (arr) {
+	if (arr.length === 0 ){
+		$('#allList').html('<p>you hava no tasks here</p>');
+		return 'no tasks to show';
+	}
 	$('#allList').html('');
 	for (var i=0 ; i < arr.length ; i++){
 		appending( arr[i].task , arr[i].importance );
@@ -256,21 +260,35 @@ function changeUserName(){
 }
 //for user 
 function changeUserPassword(){
-	console.log('change user password function')
+	console.log('change user password function');
 	if ($('#oldPass').val() === this.pass ){
+		console.log('passwords matched')
 		this.pass = $('#newPass').val();
+		$('#oldPass + p').text('password changed');
+		$('#oldPass + p').css('color','green');
+		$('#oldPass + p').show();
+
+		$('#oldPass').val('');
+		$('#newPass').val('');
+
 	} else {
-			alert('invalid old password')
+			$('#oldPass + p').text('incorrect password , please re-type old password correctly, you typed : " '+ $('#oldPass').val() + ' "');
+			$('#oldPass + p').css('color','red');
+			$('#oldPass + p').show();
+			return 'old password didn\'t change';
+
 	}
-	$('#oldPass').val('');
-	$('#newPass').val('');
+	
 }
 
 
 //for user
 //change my data modal :
 function changeUserData (){
-	console.log('show user data function / showing modal');
+	console.log('show the "change user data " function / showing modal');
+	$('#oldPass').val('');
+	$('#newPass').val('');
+	$('#oldPass + p').hide();
 	$("#myModal2").modal();
 }
 
