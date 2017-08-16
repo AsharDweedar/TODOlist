@@ -1,3 +1,34 @@
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+/*function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+*/
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        // i think trim here works insted of the while loop 
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
 $('body').on('click',':not(aside)',function(ev){
 	if ($('aside').hasClass('here')){
 		console.log('hiding the side bar');
@@ -45,7 +76,7 @@ setInterval( function(){
 var updateAvg = function  (){
 	var all = document.getElementsByTagName('li').length;
 	var avg = (currentUser.doneTasks / all ).toFixed(2);
-	$('#sec').html("<div>your progress : <progress min='0' max='1' value=''></div>");
+	$('#sec').html("<div class='fa fa-bolt '>your progress : <progress min='0' max='1' value=''></div>");
 	$('progress').val(avg);
 }
 
