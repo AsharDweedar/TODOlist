@@ -256,6 +256,9 @@ var addUser = function(){
 	var obj = user();
 
 	obj.name = prompt('type new user name :');
+	if (obj.name === null){
+		return 'creating a new account canceled';
+	}
 	obj.pass = prompt('type new password :');
 
 	allUsers.push(obj);
@@ -278,7 +281,7 @@ function showAllUsers (func){
 	console.log('show all users functoin')
 	$('tbody').text('');
 	allUsers.forEach(function(ele){
-		$('tbody').append('<tr data-val=" '+ele.id+' "><td > '+ele.id+' </td><td> '+ele.name+' </td><td><button class="'+func+'"> choose me </button></td></tr>');
+		$('tbody').append('<tr data-val=" '+ele.id+' " ><td style="padding-right:50px"> '+ele.id+' </td><td style="padding-right:50px"> '+ele.name+' </td><td><button class="'+func+'"> choose me </button></td></tr>');
 	})
 	
     $("#myModal").modal();
@@ -292,18 +295,18 @@ $('tbody').on('click','.toDelete',function(){
 		alert('you can\'t delete current user ');
 		return 'un-allowed attempt';
 	}
-			var testPassword =prompt('enter password for chosen user  :');
-			var index = (search(allUsers , $(this).parent().parent().data('val'),1));
-			if (index !== undefined){
-				if (allUsers[index].pass === testPassword ){
-					allUsers.splice(index,1);
-					showAllUsers( 'toDelete' );
-				} else {
+		var testPassword =prompt('enter password for chosen user  :');
+		var index = (search(allUsers , $(this).parent().parent().data('val'),1));
+		if (index !== undefined){
+			if (allUsers[index].pass === testPassword ){
+				allUsers.splice(index,1);
+				showAllUsers( 'toDelete' );
+			} else {
 				alert("passwords didn't match");
-				}
-			} else { 
-				console.log('error, user not found');
 			}
+		} else { 
+			console.log('error, user not found');
+		}
 })
 
 
@@ -315,11 +318,14 @@ var deleteUser = function(){
 }
 
 
-//search using id , if i is passed return index , else return the object 
+//search using id , if i is passed as a parameter return index , else return the object 
 //reseve arr of obj with key called id 
 function search(arr , ID,i){
 	var returnMe ;
 	console.log('search function for id :' , ID);
+	if (typeof ID === 'string'){
+		ID = JSON.parse(ID);
+	}
 		arr.forEach(function(object,ind){
 			if (ID === object.id){
 				console.log('object found at index ',ind)
@@ -333,10 +339,15 @@ function search(arr , ID,i){
 	return returnMe ;
 }
 
+//change user event  and function
 $('tbody').on('click','.changeUser',function(){
-		console.log('the change user function ..')
-		var testPassword =(prompt('enter password to log in :'));
+		console.log('the change user event and function ..');
 		var obj = search(allUsers , $(this).parent().parent().data('val'));
+		if (currentUser === obj){
+			return 'you are already logged in';
+		}
+		var testPassword =(prompt('enter password to log in :'));
+		
 		if (obj !== undefined){
 			if (obj.pass === testPassword ){
 				setUser(obj);
