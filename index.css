@@ -105,13 +105,13 @@ input:focus {
     height: 30px;
     color:white;
 }
-/
+
 .fa-times {
     
     background: #1d5660;
     height: 40px;
     width: 0;
-    margin-right: 20px;
+    margin-right: 5px;
     text-align: center;
     color: white;
     display: inline-block ;
@@ -125,7 +125,7 @@ i::after{
  */
 
  .fa-times::before {
-    
+
     color : white;
     font-size: 15px;
  }
@@ -256,9 +256,10 @@ nav span:not(.fa-cog) {
  */
 #sec {
     float: right;
+    /* width : 150px; */
+    height: 20px;
     padding: 5px;
 }
-
 
 
 .modal-header {
@@ -267,7 +268,7 @@ nav span:not(.fa-cog) {
 
 #empty {
     display: block;
-    color: red;
+    /* color: red; */
     margin: 20px;
     text-align: center;
     border: 1px dashed red;
