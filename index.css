@@ -191,6 +191,7 @@ aside {
     position: fixed;
     top: 0;
     left: -200px;
+    border-right: 2px solid #1d5660;
 }
 ins {
     text-decoration :  none;
@@ -249,6 +250,3 @@ nav  {
     background: #acacac ;
 }
 
-td {
-    margin: 10px ;
-}

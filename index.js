@@ -99,11 +99,11 @@ function appending(task,importance){
 
 //  add task function 
 $(".fa-plus-square").on("click",function () {
-	var newTask = $('input[type="text"]').val() ;
+	var newTask = $('#adder').val() ;
 	var importance =  $('select').val() ;
 
 	currentUser.tasks.push({ task : newTask , importance : importance })
-		$('input[type="text"]').val("");
+		$('#adder').val("");
 		appending(newTask,importance);
 		updateAvg();
 
@@ -205,7 +205,9 @@ function user (){
 	obj.doneTasks = 0;
 
 	obj.showMyTasks = showMyTasks ;
+	obj.changeUserData = changeUserData;
 	obj.changeUserName = changeUserName;
+	obj.changeUserPassword= changeUserPassword;
 	obj.showDeletedTasks = showDeletedTasks;
 
 	return obj;
@@ -246,15 +248,37 @@ var showDeletedTasks = function (){
 //for user 
 function changeUserName(){
 	console.log('change user name function')
-	var name = prompt('type new user name :');
+	var name = $('#newName').val();
 	if (name !== undefined)
 		this.name = name;
 	$('nav span').text(this.name);
+	 $('#newName').val('')
+}
+//for user 
+function changeUserPassword(){
+	console.log('change user password function')
+	if ($('#oldPass').val() === this.pass ){
+		this.pass = $('#newPass').val();
+	} else {
+			alert('invalid old password')
+	}
+	$('#oldPass').val('');
+	$('#newPass').val('');
 }
 
-var addUser = function(){
-	var obj = user();
 
+//for user
+//change my data modal :
+function changeUserData (){
+	console.log('show user data function / showing modal');
+	$("#myModal2").modal();
+}
+
+
+//add user function
+var addUser = function(){
+	console.log('adding new user , new user function')
+	var obj = user();
 	obj.name = prompt('type new user name :');
 	if (obj.name === null){
 		return 'creating a new account canceled';
