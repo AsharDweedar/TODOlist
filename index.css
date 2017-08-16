@@ -63,6 +63,9 @@ i #imp {
     font-weight: 16px
 }
 */
+::before {
+    padding : 10px;
+}
 
 li:nth-child(even) {
     background: #e8e7e7;
@@ -92,7 +95,7 @@ input:focus {
     color:white;
 }
 
-span {
+#allList span {
     
     background: #1d5660;
     height: 40px;
@@ -204,7 +207,8 @@ ins {
     background: #1d5660;
     color: #acacac;
 }
-nav > span {
+
+/* #userName{
     padding-right: 40px ;
     padding-top: 5px ;
     padding-bottom:  5px ;
@@ -214,10 +218,10 @@ nav > span {
     border-bottom-right-radius: 15px ;
     border-top-right-radius: 15px ;
     height: 30px;
-
 }
+ */
 
-nav  {
+ nav {
     background: #1d5660 ;
     padding-right: 40px ;
     padding-top: 5px ;
@@ -228,11 +232,30 @@ nav  {
     position: fixed;
     top: 10px;
     z-index: 999;
-    height: 30px;
-    width: 150px;
+    height: 40px;
+    width: 180px;
     color: #acacac;
 }
+nav span:not(.fa-cog) {
+    background: none ;
+    /* padding-right: 20px ; */
+    width: 20px;
+    z-index: 999;
+    height: 40px;
+    color: #acacac;
+    /* color :  red;
+    border: 1px solid green;  */
+  /*   margin:  7px;
+    vertical-align: center; */
+} 
 
+/*
+#userName{
+    vertical-align: text-bottom;
+} 
+#userName::before {
+    padding-bottom: 5px;
+}*/
 .deletedMode {
     background: red ;
     /* color: white ; */
@@ -242,11 +265,28 @@ nav  {
     padding: 5px;
 }
 
-::before {
-    padding : 10px;
-}
+
 
 .modal-header {
     background: #acacac ;
 }
 
+#empty {
+    display: block;
+    color: red;
+    margin: 20px;
+    text-align: center;
+    border: 1px dashed red;
+}
+
+
+span.fa-cog::before{
+    margin: 0 !important;
+    display: inline-block;
+    font-size: 2em;
+    width: 1.28571429em;
+    text-align: center;
+    box-sizing: border-box;
+    vertical-align: middle;
+    padding : 0 !important;
+}

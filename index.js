@@ -1,5 +1,6 @@
 
 $('.fa-cog').on('click',function () {
+	$('.fa-cog').toggleClass('fa-spin')
 	console.log('showing the side bar')
 	
 	$('aside').toggle(
@@ -48,11 +49,10 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 	}
 });
 
-// delete function 
+// delete  a task function 
 function deleteMe ($dele){
-
 	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('i.imp').data('val')  }  
-	console.log('delete function: ' , deletedTask )
+	console.log('delete a task function: ' , deletedTask )
 	currentUser.deletedTasks.push( deletedTask );
 
 
@@ -65,13 +65,13 @@ function deleteMe ($dele){
 		}
 	}
 
-
 	currentUser.tasks.splice(k , 1 );
 
 		if ($dele.hasClass('completed')){
 			currentUser.doneTasks -- ;
 		}
 		$dele.remove();
+		currentUser.showMyTasks();
 		updateAvg();
 }
 
@@ -92,7 +92,7 @@ $('ul').on("click","span",function(ev){
 
 
 function appending(task,importance){
-			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><span class='fa fa-times'></span> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><i class="imp" data-val="'+ importance +'">'+importance+'</i></li>')
+			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><span class='fa fa-times'><strong class='del-restore' style='font-size:10px'> delete </strong></span> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><i class="imp" data-val="'+ importance +'">'+importance+'</i></li>')
 }
 
 
@@ -104,8 +104,9 @@ $(".fa-plus-square").on("click",function () {
 
 	currentUser.tasks.push({ task : newTask , importance : importance })
 		$('#adder').val("");
-		appending(newTask,importance);
-		updateAvg();
+/*		appending(newTask,importance);
+*/		updateAvg();
+		currentUser.showMyTasks();
 
 });
 
@@ -146,10 +147,12 @@ function restore (task , importance ){
 		}
 
 		currentUser.deletedTasks.splice( k,1 );
-		if (! ($('h1').hasClass('deletedMode'))  ){
-			appending(taskObj.task , taskObj.importance );
-		} else {
+		if  ($('h1').hasClass('deletedMode')) {
+/*			appending(taskObj.task , taskObj.importance );
+*/		
 			showDeletedTasks();
+		} else {
+			showMyTasks();
 		}
 }
 
@@ -164,6 +167,7 @@ $('#undo').on('click',function(ev){
 
 	restore( deleted[deleted.length-1].task , deleted[deleted.length-1].importance  );
 	updateAvg();
+
 	ev.stopPropagation();
 })
 
@@ -200,7 +204,7 @@ function user (){
 	obj.id = newId();
 	obj.name = 'default';
 	obj.pass = 'password';
-	obj.tasks = [{task : 'the first task is here' , importance : 'important'}];
+	obj.tasks = [];
 	obj.deletedTasks = [];
 	obj.doneTasks = 0;
 
@@ -215,12 +219,15 @@ function user (){
 
 var showTasks = function (arr) {
 	if (arr.length === 0 ){
-		$('#allList').html('<p>you hava no tasks here</p>');
+		$('#allList').html('');
+		$('#empty').show();
 		return 'no tasks to show';
-	}
-	$('#allList').html('');
-	for (var i=0 ; i < arr.length ; i++){
-		appending( arr[i].task , arr[i].importance );
+	} else {
+		$('#empty').hide();
+		$('#allList').html('');
+		for (var i=0 ; i < arr.length ; i++){
+			appending( arr[i].task , arr[i].importance );
+		}
 	}
 }
 
@@ -232,7 +239,13 @@ var showMyTasks = function (){
 	$('li span').toggleClass('fa-times');
 	$('li span').html('');
 	$('h1').css('text-align','left');
+	$('.del-restore').text('');
 	showTasks(currentUser.tasks );
+	if (    !(   $('li span').hasClass('fa-times')  )   )
+	{
+		$('li span').removeClass('fa-heart-o');
+		$('li span').addClass('fa-times');
+	}
 	/*$('li span').css('width','0px');*/
 	updateAvg();
 }
@@ -241,14 +254,26 @@ var showDeletedTasks = function (){
 	console.log('show deleted tasks function');
 	$('#all>h1 , footer').addClass('deletedMode');
 	$('select , footer button , #sec , #adder ,h1 i').hide();
-	/*$('li span').toggleClass('fa-times');*/
+	$('li span').toggleClass('fa-times');
 	$('h1').css('text-align','center');
 	$('li span').html('restor me');
-	$('li span').css('width','40px');
-	$('#undo-all').show();
+	$('li span').css('width','100px');
+	$('li span').css('font-size','13px');
+	$('li span').css('padding-top','10px');
+/*	$('#del-restore').css('font-size','10px');
+*/	$('#undo-all').show();
 	showTasks(currentUser.deletedTasks );
+	$('.del-restore').text('restore');
+	if ($('li span').hasClass('fa-times')) {
+		$('li span').removeClass('fa-times');
+		$('li span').addClass('fa-heart-o');
+	}
 	/*.fa-thumbs-o-up*/
 }
+/*
+$('#del-restore').css('font-size','5px') ;
+
+*/
 //for user 
 function changeUserName(){
 	console.log('change user name function')
@@ -314,7 +339,7 @@ var setUser = function (obj){
 
 	showMyTasks();
 
-	$('nav span').text(currentUser.name);
+	$('#userName').text(currentUser.name);
 }
 
 
@@ -330,7 +355,7 @@ function showAllUsers (func){
 }
 $('td').css('margin','10px')
 
-// the delete function 
+// the delete  user function 
 $('tbody').on('click','.toDelete',function(){
 	console.log('the delete user function');
 	if ($(this).parent().parent().data('val') === currentUser.id){
