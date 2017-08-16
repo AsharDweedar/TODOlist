@@ -1,3 +1,4 @@
+
 $('nav').on('click',function () {
 	console.log('showing the side bar');
 
@@ -29,7 +30,7 @@ setInterval( function(){
 //var doneTasks = 0;
 var updateAvg = function  (){
 	var all = document.getElementsByTagName('li').length;
-	var avg = currentUser.doneTasks+"/"+all;
+	var avg = (currentUser.doneTasks / all ).toFixed(2);
 	$('#sec').html("<div>you finished : " + avg +" of your tasks .</div>")
 }
 
@@ -69,23 +70,32 @@ function deleteMe ($dele){
 		}
 	}
 
+	if ( $('h1').hasClass('deletedMode') && currentUser.tasks.length === 0  ){
+			$('#empty').show();
+			//return 'no tasks to show';
+	}
+
 	currentUser.tasks.splice(k , 1 );
 
 		if ($dele.hasClass('completed')){
 			currentUser.doneTasks -- ;
 		}
 		$dele.remove();
-		currentUser.showMyTasks();
+		//currentUser.showMyTasks();
 		updateAvg();
 }
 
 
 // delete  event 
-$('ul').on("click","span",function(ev){
+$('ul').on("click",".fa-times",function(ev){
 	console.log('to delete event : ', $(this).parent());
 
 	if ( $('h1').hasClass('deletedMode') ){
-		restore ($(this).parent().data('val').split('-').join(' ') ,$(this).parent().find('i.imp').data('val')  )
+		$(this).parent().fadeOut(500,restore ($(this).parent().data('val').split('-').join(' ') ,$(this).parent().find('i.imp').data('val')  ));
+		/*if ( currentUser.deletedTasks.length === 0 ) {
+			$('#empty').show();
+			//return 'no tasks to show';
+		}*/
 	} else {
 		$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
 	}
@@ -96,21 +106,22 @@ $('ul').on("click","span",function(ev){
 
 
 function appending(task,importance){
-			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><span class='fa fa-times'><strong class='del-restore' style='font-size:10px'> delete </strong></span> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><i class="imp" data-val="'+ importance +'">'+importance+'</i></li>')
+			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><i class='fa fa-times del-restore' style='font-size:10px' style='color : white'> delete </i></i> " + task  +  '<i class = "fa fa-thumbs-o-up"> </i><strong class="imp" data-val="'+ importance +'">'+importance+'</strong></li>')
 }
 
 
 
 //  add task function 
-$(".fa-plus-square").on("click",function () {
+$("h1").on("click",'.fa-plus-square',function () {
 	var newTask = $('#adder').val() ;
 	var importance =  $('select').val() ;
 
 	currentUser.tasks.push({ task : newTask , importance : importance })
 		$('#adder').val("");
-/*		appending(newTask,importance);
-*/		updateAvg();
-		currentUser.showMyTasks();
+		appending(newTask,importance);
+		updateAvg();
+		$('#empty').hide();
+		//currentUser.showMyTasks();
 
 });
 
@@ -151,12 +162,14 @@ function restore (task , importance ){
 		}
 
 		currentUser.deletedTasks.splice( k,1 );
-		if  ($('h1').hasClass('deletedMode')) {
-/*			appending(taskObj.task , taskObj.importance );
-*/		
-			showDeletedTasks();
+		if  (!($('h1').hasClass('deletedMode'))) {
+			appending(taskObj.task , taskObj.importance );
+
+			
+			//showDeletedTasks();
 		} else {
-			showMyTasks();
+			showDeletedTasks();
+			//showMyTasks();
 		}
 }
 
@@ -237,15 +250,19 @@ var showTasks = function (arr) {
 
 // for user 
 var showMyTasks = function (){
+	$('h1').text('MY TO DO LIST');
+	$('h1').append('<i class="fa fa-plus-square" ></i>')
 	console.log('show my tasks function');
 	$('#all>h1 , footer ').removeClass('deletedMode');
 	$('select , footer button, #sec , #adder  ,h1 i').show();
-	$('li span').toggleClass('fa-times');
-	$('li span').html('');
+	/*$('li span').toggleClass('fa-times');*/
+	$('li span strong').html('');
 	$('h1').css('text-align','left');
+	$('h1').css('background','#1d5660');
+	$('footer').css('background','#1d5660');
 	$('.del-restore').text('');
 	showTasks(currentUser.tasks );
-	if (    !(   $('li span').hasClass('fa-times')  )   )
+	if (  $('li span').hasClass('fa-heart-o')  )   
 	{
 		$('li span').removeClass('fa-heart-o');
 		$('li span').addClass('fa-times');
@@ -258,12 +275,14 @@ var showDeletedTasks = function (){
 	console.log('show deleted tasks function');
 	$('#all>h1 , footer').addClass('deletedMode');
 	$('select , footer button , #sec , #adder ,h1 i').hide();
-	$('li span').toggleClass('fa-times');
+/*	$('li span').toggleClass('fa-times');
+*/	$('h1').text('DELETED TASKS');
 	$('h1').css('text-align','center');
-	$('li span').html('restor me');
+	$('h1').css('background','red');
+	$('footer').css('background','red');
 	$('li span').css('width','100px');
 	$('li span').css('font-size','13px');
-	$('li span').css('padding-top','10px');
+	/*$('li span').css('padding-top','10px');*/
 /*	$('#del-restore').css('font-size','10px');
 */	$('#undo-all').show();
 	showTasks(currentUser.deletedTasks );
@@ -437,7 +456,7 @@ function changeCurrentUser(ev){
 	showAllUsers("changeUser");
 }
 
-
+ $('li:hover span.fa-times').css('width','40px');
 
 var currentUser = user();
 allUsers.push(currentUser);

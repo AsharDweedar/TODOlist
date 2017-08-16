@@ -1,9 +1,9 @@
+
 * {
     margin: 0;
     padding :0;
     vertical-align: middle;    
 }
-
 
 body {
 	background-image: url("wallup-26163.jpg");
@@ -46,6 +46,17 @@ ul {
     margin: 0;
     padding: 0; 
 }
+
+.inComplete{
+    color: #0c272c;
+}
+
+
+.completed {
+    color: darkgray;
+    text-decoration: line-through;
+}
+
 
 li {
     background: white;
@@ -94,16 +105,16 @@ input:focus {
     height: 30px;
     color:white;
 }
-
-#allList span {
+/
+.fa-times {
     
     background: #1d5660;
     height: 40px;
     width: 0;
     margin-right: 20px;
     text-align: center;
-    color: #e8e7e7;
-    display: inline-block;
+    color: white;
+    display: inline-block ;
 }
 
 
@@ -112,6 +123,14 @@ i::after{
     vertical-align: center;
 }
  */
+
+ .fa-times::before {
+    
+    color : white;
+    font-size: 15px;
+ }
+
+
 .fa-thumbs-o-up {
     
     background: #1d5660;
@@ -149,13 +168,7 @@ i::after{
     font-size: 18px;
     margin-top: 7px;
 }
-.inComplete {
-	color: #0c272c;
-}
-.completed {
-	color: darkgray;
-    text-decoration: line-through;
-}
+
 
 footer {
     border-top: 4px solid #acacac;
@@ -163,13 +176,6 @@ footer {
     height: 42px;
 }
 
-
-/*
-i{
-	float :  right;
-	margin-right: 30px;
-}
-*/
 #date {
     width: 50%;
     padding: 10px;
@@ -192,6 +198,7 @@ aside {
     left: -200px;
     border-right: 2px solid #1d5660;
 }
+
 ins {
     text-decoration :  none;
     display: block;
@@ -242,11 +249,11 @@ nav span:not(.fa-cog) {
     color: #acacac;  
 } 
 
-/
+/* 
 .deletedMode {
-    background: red ;
+    background: red !important;
 }
-
+ */
 #sec {
     float: right;
     padding: 5px;
@@ -279,7 +286,16 @@ span.fa-cog::before{
 }
 
 
-
- li:hover i.fa-thumbs-o-up , li:hover span {
+/* 
+li:hover i.fa-thumbs-o-up , li:hover i.fa-times {
+    padding-top : 7px ;
     width: 40px;
-}  
+    background: #1d5660;
+}   */
+
+ li:hover i{
+    width: 40px;
+    height: 40px;
+    background: #1d5660;
+  } 
+
