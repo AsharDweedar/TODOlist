@@ -1,14 +1,18 @@
+$('nav').on('click',function () {
+	console.log('showing the side bar');
 
-$('.fa-cog').on('click',function () {
-	$('.fa-cog').toggleClass('fa-spin')
-	console.log('showing the side bar')
-	
 	$('aside').toggle(
 	function() {
 	    $(this).css('left', '0')
 	}, function() {
 	    $(this).css('left', '0')
-	})
+	});
+	$('aside').toggleClass('here');
+	if ( $('aside').hasClass('here') ){
+		$('.fa-cog').addClass('fa-spin');
+	} else {
+		$('.fa-cog').removeClass('fa-spin');
+	}
 //	ev.stopPropagation();
 })
 
