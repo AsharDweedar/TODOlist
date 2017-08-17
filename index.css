@@ -46,7 +46,7 @@ ul {
     margin: 0;
     padding: 0; 
 }
-
+/* 
 .inComplete{
     color: #0c272c;
 }
@@ -57,12 +57,12 @@ ul {
     text-decoration: line-through;
 }
 
-
+ */
 li {
     background: white;
     height: 40px;
-/*    line-height: 40px;*/
-    color: #e8e7e7;
+/*    line-height: 40px;
+    color: #e8e7e7;*/
     font-size: 20px;
     border-top: 2px solid #60868d;
     overflow: hidden;

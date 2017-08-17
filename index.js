@@ -82,11 +82,17 @@ var updateAvg = function  (){
 	$('progress').val(  isNaN(avg)? 0 : avg  );
 }
 
-    
+function updateCSS (){
+	$('.inComplete').css('color','#0c272c');
+	$('.completed').css('color','darkgray');
+	$('.completed').css('text-decoration','line-through');
+   }
+
+
 // done tasks function
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	if  ($('h1').hasClass('deletedMode')) {
-		alert('restore item to mark as completed')
+		alert('restore item to mark as completed');
 	} else {
 		$(this).parent().toggleClass('completed');
 		if ($(this).parent().hasClass('completed')){
@@ -94,7 +100,7 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 		} else {
 			currentUser.doneTasks--;
 		}
-		
+		updateCSS();
 		updateAvg();
 	}
 });
@@ -103,7 +109,7 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 //add it to deleted array and remove it from tasks array 
 //handle showing\hiding it from the window 
 function deleteMe ($dele){
-	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('.imp').data('val')  }  
+	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('.imp').data('val') ,done: $dele.hasClass('completed') }  
 	console.log('delete a task function: ' , deletedTask )
 	currentUser.deletedTasks.push( deletedTask );
 
@@ -121,7 +127,7 @@ function deleteMe ($dele){
 
 	currentUser.tasks.splice(k , 1 );
 
-	if ($dele.hasClass('completed')){
+	if (deletedTask.done){
 		currentUser.doneTasks -- ;
 	}
 	$dele.remove();
@@ -132,14 +138,17 @@ function deleteMe ($dele){
 // delete  event  => calls the restore or the delete function 
 //handle showing the #empty paragraph 
 $('ul').on("click",".fa-times",function(ev){
-	console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'));
+	console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'),$(this).parent().hasClass('completed') );
+
 	//deleted mode 
 	if ( $('h1').hasClass('deletedMode') ){
-		$(this).parent().fadeOut(500,restore ($(this).parent().data('val').split('-').join(' ') ,$(this).parent().find('.imp').data('val')  ));
+		$(this).parent().fadeOut(500,restore ($(this).parent().data('val').replace('-',' '),$(this).parent().find('.imp').data('val') , $(this).parent().hasClass('completed') ));
 		if ( currentUser.deletedTasks.length === 0 ) {
 			$('#empty').show();
 		}
-	} else { //normal tasks mode 
+	} else { 
+
+	//normal tasks mode 
 		$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
 		if ( currentUser.tasks.length === 0 ) {
 			$('#empty').show();
@@ -151,8 +160,8 @@ $('ul').on("click",".fa-times",function(ev){
 
 
 
-function appending(task,importance,mode='delete'){
-			$("ul").append("<li class='inComplete' data-val="+task.split(' ').join('-')+"><i class='fa fa-times del-restore' style='font-size:10px'> "+mode+" </i>" + task  +  '<i class = "fa fa-thumbs-o-up"> </i><strong class="imp" data-val="'+ importance +'">'+importance+'</strong></li>')
+function appending(task,importance,functionality='delete',completedClass=''){
+			$("ul").append("<li class='inComplete"+completedClass+"' data-val="+task.replace(' ','-')+"><i class='fa fa-times del-restore' style='font-size:10px'> "+functionality+" </i>" + task  +  '<i class = "fa fa-thumbs-o-up"> </i><strong class="imp" data-val="'+ importance +'">'+importance+'</strong></li>')
 }
 
 
@@ -164,13 +173,11 @@ $("h1").on("click",'.fa-plus-square',function () {
 	var newTask = $('#adder').val() ;
 	var importance =  $('select').val() ;
 
-	currentUser.tasks.push({ task : newTask , importance : importance })
+	currentUser.tasks.push({ task : newTask , importance : importance , done : false })
 		$('#adder').val("");
 		appending(newTask,importance);
 		updateAvg();
 		$('#empty').hide();
-		//currentUser.showMyTasks();
-
 });
 
 
@@ -181,9 +188,9 @@ $('button[type="reset"]').on('click',function(ev){
 	var numOfEle = arr.length ;
 	console.log('delete arr.length :' , numOfEle);
 	while (numOfEle > 0){
-		var del = $('#allList li:first-child');
-		console.log('delete element ', del);
-		deleteMe(del);
+		var $del = $('#allList li:first-child');
+		console.log('delete element ', $del.data('val'));
+		deleteMe($del);
 		numOfEle--;
 	}
 	updateAvg();
@@ -192,12 +199,12 @@ $('button[type="reset"]').on('click',function(ev){
 
 
 //restore a task , recieve task info and add it to tasks arr , delete it from deleted arr 
-function restore (task , importance ){
+function restore (task , importance , done ){
 	console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
-	var taskObj =  {  task :task ,importance : importance  };
+	var taskObj =  {  task :task ,importance : importance ,done :  done};
 		console.log('restor : ', taskObj )
-		currentUser.tasks.push(  taskObj  )
+		currentUser.tasks.push( taskObj )
 		
 
 		// this should be merged with search function and deleted later 
@@ -212,7 +219,7 @@ function restore (task , importance ){
 
 		currentUser.deletedTasks.splice( k,1 );
 		if  (!($('h1').hasClass('deletedMode'))) {
-			appending(taskObj.task , taskObj.importance );
+			appending(taskObj.task , taskObj.importance ,undefined,done );
 			$('#empty').hide();
 			
 			//showDeletedTasks();
@@ -227,12 +234,13 @@ function restore (task , importance ){
 $('#undo').on('click',function(ev){
 	console.log('undo event ')
 	var deleted = currentUser.deletedTasks ;
+	var ind = deleted[deleted.length-1] ;
 	if (deleted.length === 0 ){
 		alert ('nothing to undo')
 		return 'nothing to undo'
 	}
 
-	restore( deleted[deleted.length-1].task , deleted[deleted.length-1].importance  );
+	restore( ind.task , ind.importance ,ind.done  );
 	updateAvg();
 
 	ev.stopPropagation();
@@ -242,10 +250,14 @@ $('#undo').on('click',function(ev){
 // undo all event and function
 //call restore function
 $('#undo-all').on('click',function(ev){
+	console.log('restore all event')
 	var deleted = currentUser.deletedTasks ;
-	console.log('restoring :' , deleted.length , ' items');
 	while (deleted.length > 0){
-		restore(deleted[deleted.length-1].task , deleted[deleted.length-1].importance);
+	var ind = deleted[deleted.length-1] ;
+	console.log('restoring :' , deleted.length , ' items');
+		debugger;
+		console.log('inside the while loop',ind.task , ind.importance , ind.done);
+		restore(ind.task , ind.importance , ind.done);
 	}
 	updateAvg();
 	ev.stopPropagation();	
