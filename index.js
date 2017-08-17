@@ -1,16 +1,15 @@
-function setCookie(cname, cvalue, exdays) {
+function setCookie(cname, cvalue, exdays = 365) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-/*function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+
+function  delCookie(cname) {
+    
+    setCookie(cname , "" , new Date());
 }
-*/
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -27,8 +26,11 @@ function getCookie(cname) {
     return "";
 }
 
+function checkCookie(cname) {
+    return (getCookie(cname) !== "") ; 
+} 
 
-
+//hide the aside on click 
 $('body').on('click',':not(aside)',function(ev){
 	if ($('aside').hasClass('here')){
 		console.log('hiding the side bar');
@@ -44,6 +46,7 @@ $('body').on('click',':not(aside)',function(ev){
 	ev.stopPropagation();
 })
 
+//show hide aside 
 $('nav').on('click',function (ev) {
 	$('aside').toggle(
 	function() {
@@ -71,8 +74,7 @@ setInterval( function(){
 },1000)
 
 
-
-//var doneTasks = 0;
+//update average => assign value to progress tag
 var updateAvg = function  (){
 	var all = document.getElementsByTagName('li').length;
 	var avg = (currentUser.doneTasks / all ).toFixed(2);
@@ -84,7 +86,6 @@ var updateAvg = function  (){
 
 
 // done tasks function
-
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	if  ($('h1').hasClass('deletedMode')) {
 		alert('restore item to mark as completed')
@@ -100,14 +101,14 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 	}
 });
 
-// delete  a task function 
+// delete  a task function  => recieve a task taaaaag
+//add it to deleted array and remove it from tasks array 
+//handle showing\hiding it from the window 
 function deleteMe ($dele){
 	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('.imp').data('val')  }  
 	console.log('delete a task function: ' , deletedTask )
 	currentUser.deletedTasks.push( deletedTask );
 
-
-	// this should be merged with search function and deleted later 
 	// this is to get the deleted tasks out of tasks arr ;
 	var k ;
 	for ( k=0;k<currentUser.tasks.length ; k++){
@@ -116,37 +117,33 @@ function deleteMe ($dele){
 		}
 	}
 
-	
 	if (currentUser.tasks.length === 0  ){
 		$('#empty').show();
-	}		//return 'no tasks to show';
-	 
+	}
 
 	currentUser.tasks.splice(k , 1 );
 
-		if ($dele.hasClass('completed')){
-			currentUser.doneTasks -- ;
-		}
-		$dele.remove();
-		//currentUser.showMyTasks();
-		updateAvg();
+	if ($dele.hasClass('completed')){
+		currentUser.doneTasks -- ;
+	}
+	$dele.remove();
+	updateAvg();
 }
 
 
-// delete  event 
+// delete  event  => calls the restore or the delete function 
+//handle showing the #empty paragraph 
 $('ul').on("click",".fa-times",function(ev){
 	console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'));
-
+	//deleted mode 
 	if ( $('h1').hasClass('deletedMode') ){
 		$(this).parent().fadeOut(500,restore ($(this).parent().data('val').split('-').join(' ') ,$(this).parent().find('.imp').data('val')  ));
 		if ( currentUser.deletedTasks.length === 0 ) {
-			console.log('deletedTasks.length === 0 ');
 			$('#empty').show();
 		}
-	} else {
+	} else { //normal tasks mode 
 		$(this).parent().fadeOut(500,deleteMe ($(this).parent()));
 		if ( currentUser.tasks.length === 0 ) {
-			console.log('tasks.length === 0');
 			$('#empty').show();
 		}
 	}
@@ -162,7 +159,9 @@ function appending(task,importance,mode='delete'){
 
 
 
-//  add task function 
+//  add task event and function 
+//add to tasks array 
+//handle viewing on window 
 $("h1").on("click",'.fa-plus-square',function () {
 	var newTask = $('#adder').val() ;
 	var importance =  $('select').val() ;
@@ -177,7 +176,8 @@ $("h1").on("click",'.fa-plus-square',function () {
 });
 
 
-//reset function
+//reset event and function
+//send all tasks to deleted array 
 $('button[type="reset"]').on('click',function(ev){
 	var arr = document.getElementsByTagName('li');
 	var numOfEle = arr.length ;
@@ -193,7 +193,7 @@ $('button[type="reset"]').on('click',function(ev){
 })
 
 
-
+//restore a task , recieve task info and add it to tasks arr , delete it from deleted arr 
 function restore (task , importance ){
 	console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
@@ -224,7 +224,8 @@ function restore (task , importance ){
 		}
 }
 
-// undo delete function 
+// undo 'delete a task' event and function 
+//call restore function
 $('#undo').on('click',function(ev){
 	console.log('undo event ')
 	var deleted = currentUser.deletedTasks ;
@@ -240,7 +241,8 @@ $('#undo').on('click',function(ev){
 })
 
 
-// undo all event 
+// undo all event and function
+//call restore function
 $('#undo-all').on('click',function(ev){
 	var deleted = currentUser.deletedTasks ;
 	console.log('restoring :' , deleted.length , ' items');
@@ -249,9 +251,10 @@ $('#undo-all').on('click',function(ev){
 	}
 	updateAvg();
 	ev.stopPropagation();	
-
 })
 
+
+//create uniqe id each time 
 function idCreator(){
 	var n = 0;
 	function num(){
@@ -259,11 +262,16 @@ function idCreator(){
 	}
 	return num;
 }
+
+
+//id creatore for users 
 var newId = idCreator();
 
+//contain all users array 
 allUsers = [];
 
 
+//user object creatore 
 function user (){
 	var obj = {};
 
@@ -285,6 +293,8 @@ function user (){
 	return obj;
 }
 
+
+//show tasks in a spicific array 
 var showTasks = function (arr , mode='delete') {
 	if (arr.length === 0 ){
 		$('#allList').html('');
@@ -299,60 +309,55 @@ var showTasks = function (arr , mode='delete') {
 	}
 }
 
-// for user 
+// show tasks of current user 
 var showMyTasks = function (){
 	$('h1').text('MY TO DO LIST');
 	$('h1').append('<i class="fa fa-plus-square" ></i>')
+
 	console.log('show my tasks function');
 	$('#all>h1 , footer ').removeClass('deletedMode');
 	$('select , footer button, #sec , #adder  ,h1 i').show();
-	/*$('li span').toggleClass('fa-times');*/
 	$('li span strong').html('');
 	$('h1').css('text-align','left');
 	$('h1').css('background','#1d5660');
 	$('footer').css('background','#1d5660');
-	/*$('.del-restore').text('');*/
+
 	showTasks(currentUser.tasks );
-	if (  $('li span').hasClass('fa-heart-o')  )   
-	{
+
+	if ($('li span').hasClass('fa-heart-o')) {
 		$('li span').removeClass('fa-heart-o');
 		$('li span').addClass('fa-times');
 	}
-	/*$('li span').css('width','0px');*/
+
 	$('ul + p').css('color','green');
 	$('ul + p').css('border-color','green');
 	updateAvg();
 }
-//for user 
+
+//show deleted tasks for current user , enter deleted mode styles
 var showDeletedTasks = function (){
 	console.log('show deleted tasks function');
 	$('#all>h1 , footer').addClass('deletedMode');
 	$('select , footer button , #sec , #adder ,h1 i').hide();
-/*	$('li span').toggleClass('fa-times');
-*/	$('h1').text('DELETED TASKS');
+	$('h1').text('DELETED TASKS');
 	$('h1').css('text-align','center');
 	$('h1').css('background','red');
 	$('footer').css('background','red');
-	//$('li span').css('width','100px');
 	$('li span').css('font-size','13px');
-	/*$('li span').css('padding-top','10px');*/
-/*	$('#del-restore').css('font-size','10px');
-*/	$('#undo-all').show();
+	$('#undo-all').show();
+
 	showTasks(currentUser.deletedTasks ,'restore');
-	// $('.del-restore').text('restore');
+	
 	if ($('li span').hasClass('fa-times')) {
 		$('li span').removeClass('fa-times');
 		$('li span').addClass('fa-heart-o');
 	}
+
 	$('ul + p').css('color','red');
 	$('ul + p').css('border-color','red');
-	/*.fa-thumbs-o-up*/
 }
-/*
-$('#del-restore').css('font-size','5px') ;
 
-*/
-//for user 
+//change 'current user' name inside the modal 'input tag' 
 function changeUserName(){
 	console.log('change user name function')
 	var name = $('#newName').val();
@@ -361,7 +366,8 @@ function changeUserName(){
 	$('nav span').text(this.name);
 	 $('#newName').val('')
 }
-//for user 
+
+//change 'current user' password inside the modal 'input tag' 
 function changeUserPassword(){
 	console.log('change user password function');
 	if ($('#oldPass').val() === this.pass ){
@@ -381,12 +387,9 @@ function changeUserPassword(){
 			return 'old password didn\'t change';
 
 	}
-	
 }
 
-
-//for user
-//change my data modal :
+//show the 'change my data' modal : (for current user info)
 function changeUserData (){
 	console.log('show the "change user data " function / showing modal');
 	$('#oldPass').val('');
@@ -396,7 +399,7 @@ function changeUserData (){
 }
 
 
-//add user function
+//add a new user function
 var addUser = function(){
 	console.log('adding new user , new user function')
 	var obj = user();
@@ -422,6 +425,7 @@ var setUser = function (obj){
 
 
 //show modal of all users  
+//recive a function for the button beside each user 
 function showAllUsers (func){
 	console.log('show all users functoin')
 	$('tbody').text('');
@@ -431,9 +435,11 @@ function showAllUsers (func){
 	
     $("#myModal").modal();
 }
+
+//style td for the table inside the 'all users modal' 
 $('td').css('margin','10px')
 
-// the delete  user function 
+// the delete  user event for the button inside the table if it have the class 'toDelete' ,  inside the 'all users' modal 
 $('tbody').on('click','.toDelete',function(){
 	console.log('the delete user function');
 	if ($(this).parent().parent().data('val') === currentUser.id){
@@ -457,6 +463,7 @@ $('tbody').on('click','.toDelete',function(){
 
 
 // choose a user to delete 
+//call show all users function with the class toDelete for the button of each user  
 var deleteUser = function(){
 		console.log('delete user event ')
 		showAllUsers("toDelete");
@@ -484,7 +491,7 @@ function search(arr , ID,i){
 	return returnMe ;
 }
 
-//change user event  and function
+//change user event and function if the button of the table inside the modal of 'all users' has the class 'changeUser'
 $('tbody').on('click','.changeUser',function(){
 		console.log('the change user event and function ..');
 		var obj = search(allUsers , $(this).parent().parent().data('val'));
@@ -505,13 +512,14 @@ $('tbody').on('click','.changeUser',function(){
 })
 
 
-//change current user 
+//change current user , the function to set the class of 'changeUser' to the button of 'all users' modal 
 function changeCurrentUser(ev){
 	console.log('changeCurrentUser func')
 	showAllUsers("changeUser");
 }
 
- $('li:hover span.fa-times').css('width','40px');
+
+$('li:hover span.fa-times').css('width','40px');
 
 
 
