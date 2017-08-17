@@ -78,13 +78,11 @@ setInterval( function(){
 var updateAvg = function  (){
 	var all = document.getElementsByTagName('li').length;
 	var avg = (currentUser.doneTasks / all ).toFixed(2);
-	$('#sec').html("<div class='fa fa-bolt '>your progress : <progress min='0' max='1' value=''></div>");
-	$('progress').val(avg);
+	$('#sec').html("<div class='fa fa-bolt '>your progress :</div> <progress min='0' max='1' value='' ></progress>");
+	$('progress').val(  isNaN(avg)? 0 : avg  );
 }
 
     
-
-
 // done tasks function
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	if  ($('h1').hasClass('deletedMode')) {
@@ -358,16 +356,18 @@ var showDeletedTasks = function (){
 }
 
 //change 'current user' name inside the modal 'input tag' 
+// 'this' means the user (this function is inside the user obj)
 function changeUserName(){
 	console.log('change user name function')
 	var name = $('#newName').val();
 	if (name !== undefined)
 		this.name = name;
-	$('nav span').text(this.name);
+	$('nav span#userName').text(this.name);
 	 $('#newName').val('')
 }
 
 //change 'current user' password inside the modal 'input tag' 
+// 'this' means the user (this function is inside the user obj)
 function changeUserPassword(){
 	console.log('change user password function');
 	if ($('#oldPass').val() === this.pass ){
@@ -525,5 +525,5 @@ $('li:hover span.fa-times').css('width','40px');
 
 var currentUser = user();
 allUsers.push(currentUser);
-setUser(currentUser)
+setUser(currentUser);
 
