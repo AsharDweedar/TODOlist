@@ -107,7 +107,7 @@ input:focus {
 }
 
 .fa-times {
-    
+
     background: #1d5660;
     height: 40px;
     width: 0;
@@ -118,20 +118,20 @@ input:focus {
 }
 
 
-/* 
+ /* 
 i::after{
     vertical-align: center;
 }
- */
+  */
 
- .fa-times::before {
+ .fa-times::before , .fa-trash::before { 
 
     color : white;
-    font-size: 15px;
+    font-size: 15px ;
  }
 
 
-.fa-thumbs-o-up {
+.fa-thumbs-o-up , .fa-trash {
     
     background: #1d5660;
     height: 40px;
@@ -139,7 +139,10 @@ i::after{
     margin-left: 20px;
     text-align: center;
     color: #e8e7e7;
-    display: inline-block;
+    display: inline-block ;
+    /* border: 1px solid red; */
+   /*  padding-left: 5px; */
+    padding-top: 3px;
     float: right;
     
 }
@@ -250,7 +253,7 @@ nav span:not(.fa-cog) {
 } 
 
 /* 
-.deletedMode {
+.tedMode {
     background: red !important;
 }
  */
@@ -313,3 +316,11 @@ li:hover i.fa-thumbs-o-up , li:hover i.fa-times {
     background: #1d5660;
   } 
 
+.fa.fa-thumbs-o-up::before , .fa-trash::before {
+    text-align: center;
+    margin-left : 5px;
+    padding: 0px;
+    font-size: 1.5em ;
+    /* border : 1px dashed green ; */
+    display: inline-block ;
+}

@@ -74,16 +74,53 @@ setInterval( function(){
 },1000)
 
 
+function searchTasks (arr , $tag){
+	var returnMe ;
+
+	arr.forEach(function(object,ind){
+		console.log(object, ind)
+		console.log($tag.data('val'))
+
+		if ( $tag.data('val').split('-').join(' ') === object.task){
+			console.log(object.task);
+			console.log('object found at index ',ind)
+			returnMe = ind ;
+		}
+	})	
+	return returnMe ;
+}
+
+
+/*
+ $('.fa-trash::before').css('color', 'white');
+ $('.fa-trash::before').css('font-size', '15px');
+ 
+ $('.fa-times::before').css('color', 'white');
+ $('.fa-times::before').css('font-size', '15px');
+ 
+*/
 //update average => assign value to progress tag
 var updateAvg = function  (){
+	console.log('update AVG function')
 	var all = document.getElementsByTagName('li').length;
-	var avg = (currentUser.doneTasks / all ).toFixed(2);
+	
+	var doneTasks = 0;
+	for (var c=0; c<currentUser.tasks.length;c++){
+		//console.log('c=',c , '\ncurrentUser.tasks[c].done:',currentUser.tasks[c].done);
+		if (currentUser.tasks[c].done){
+			console.log('inside condition');
+			doneTasks++;
+		}
+	}
+
+	var avg = (doneTasks / all ).toFixed(2);
 	$('#sec').html("<div class='fa fa-bolt '>your progress :</div> <progress min='0' max='1' value='' ></progress>");
 	$('progress').val(  isNaN(avg)? 0 : avg  );
 }
 
 function updateCSS (){
 	$('.inComplete').css('color','#0c272c');
+	$('.inComplete').css('text-decoration','none');
 	$('.completed').css('color','darkgray');
 	$('.completed').css('text-decoration','line-through');
    }
@@ -95,15 +132,35 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 		alert('restore item to mark as completed');
 	} else {
 		$(this).parent().toggleClass('completed');
-		if ($(this).parent().hasClass('completed')){
-			currentUser.doneTasks++;
-		} else {
-			currentUser.doneTasks--;
-		}
+
+		//change object connected to this tag
+
+		console.log(searchTasks(currentUser.tasks , $(this).parent()));
+		console.log(currentUser.tasks );
+
+		currentUser.tasks[searchTasks(currentUser.tasks , $(this).parent())].done = $(this).parent().hasClass('completed');
+		
 		updateCSS();
 		updateAvg();
 	}
 });
+
+
+// delete for ever function
+$('ul').on("click",'.fa-trash',function(){
+
+	$(this).parent().fadeOut(500,function(){
+		$(this).remove();
+	})
+
+	currentUser.deletedTasks.splice(searchTasks(currentUser.deletedTasks , $(this).parent()) , 1 ); 
+	
+	if (currentUser.deletedTasks.length === 0 ){
+			$('#empty').show();
+		}
+		updateCSS();
+});
+
 
 // delete  a task function  => recieve a task taaaaag
 //add it to deleted array and remove it from tasks array 
@@ -127,12 +184,10 @@ function deleteMe ($dele){
 
 	currentUser.tasks.splice(k , 1 );
 
-	if (deletedTask.done){
-		currentUser.doneTasks -- ;
-	}
 	$dele.remove();
 	updateAvg();
 }
+
 
 
 // delete  event  => calls the restore or the delete function 
@@ -140,9 +195,14 @@ function deleteMe ($dele){
 $('ul').on("click",".fa-times",function(ev){
 	console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'),$(this).parent().hasClass('completed') );
 
+	var obj = {
+		task : $(this).parent().data('val').split('-').join(' ') ,
+		importance : $(this).parent().find('.imp').data('val'),
+		done : $(this).parent().hasClass('completed') 
+	}
 	//deleted mode 
 	if ( $('h1').hasClass('deletedMode') ){
-		$(this).parent().fadeOut(500,restore ($(this).parent().data('val').replace('-',' '),$(this).parent().find('.imp').data('val') , $(this).parent().hasClass('completed') ));
+		$(this).parent().fadeOut(500,restore ( obj ));
 		if ( currentUser.deletedTasks.length === 0 ) {
 			$('#empty').show();
 		}
@@ -160,8 +220,16 @@ $('ul').on("click",".fa-times",function(ev){
 
 
 
-function appending(task,importance,functionality='delete',completedClass=''){
-			$("ul").append("<li class='inComplete"+completedClass+"' data-val="+task.replace(' ','-')+"><i class='fa fa-times del-restore' style='font-size:10px'> "+functionality+" </i>" + task  +  '<i class = "fa fa-thumbs-o-up"> </i><strong class="imp" data-val="'+ importance +'">'+importance+'</strong></li>')
+function appending(obj){
+	var deletedMode = $('h1').hasClass('deletedMode') ;
+
+	var leftFunctionality = (deletedMode?'restore':'delete' )
+	var completedClass = (obj.done?'completed': '');
+	var rightSympole =( deletedMode ? 'fa-trash'  : 'fa-thumbs-o-up');
+	var rightFunctionality = (deletedMode? 'delete':'done' )
+
+	$("ul").append("<li class='inComplete "+completedClass+"' data-val="+obj.task.split(' ').join('-')+"><i class='fa fa-times' style='font-size:10px'> "+leftFunctionality+" </i>" + obj.task  +  '<i class = "fa '+rightSympole+'" style="font-size:10px">'+rightFunctionality +' </i><strong class="imp" data-val="'+ obj.importance +'">'+obj.importance+'</strong></li>');
+	updateCSS();
 }
 
 
@@ -170,12 +238,12 @@ function appending(task,importance,functionality='delete',completedClass=''){
 //add to tasks array 
 //handle viewing on window 
 $("h1").on("click",'.fa-plus-square',function () {
-	var newTask = $('#adder').val() ;
+	var newTask = $('#adder').val().trim() ;
 	var importance =  $('select').val() ;
 
 	currentUser.tasks.push({ task : newTask , importance : importance , done : false })
 		$('#adder').val("");
-		appending(newTask,importance);
+		appending({task:newTask,importance:importance,done:false});
 		updateAvg();
 		$('#empty').hide();
 });
@@ -199,34 +267,34 @@ $('button[type="reset"]').on('click',function(ev){
 
 
 //restore a task , recieve task info and add it to tasks arr , delete it from deleted arr 
-function restore (task , importance , done ){
+function restore ( taskObj ){
+
 	console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
-	var taskObj =  {  task :task ,importance : importance ,done :  done};
-		console.log('restor : ', taskObj )
-		currentUser.tasks.push( taskObj )
+
+	console.log('restor : ', taskObj )
+	currentUser.tasks.push( taskObj )
 		
 
-		// this should be merged with search function and deleted later 
-		// this is to get the deleted tasks out of tasks arr ;
-		var k ;
-		for ( k=0;k<deleted.length ; k++){
-			if (JSON.stringify(taskObj) === JSON.stringify(deleted[k])){
-				console.log('found :', taskObj , 'at index = ' , k)
-				break;
-			}
+	// this should be merged with search function and deleted later 
+	// this is to get the deleted tasks out of tasks arr ;
+	var k ;
+	for ( k=0;k<deleted.length ; k++){
+		if (JSON.stringify(taskObj) === JSON.stringify(deleted[k])){
+			console.log('found :', taskObj , 'at index = ' , k)
+			break;
 		}
-
-		currentUser.deletedTasks.splice( k,1 );
-		if  (!($('h1').hasClass('deletedMode'))) {
-			appending(taskObj.task , taskObj.importance ,undefined,done );
-			$('#empty').hide();
-			
-			//showDeletedTasks();
-		} else {
-			showDeletedTasks();
-			//showMyTasks();
-		}
+	}
+	currentUser.deletedTasks.splice( k,1 );
+	if  (!($('h1').hasClass('deletedMode'))) {
+		appending(taskObj);
+		$('#empty').hide();
+		
+		//showDeletedTasks();
+	} else {
+		showDeletedTasks();
+		//showMyTasks();
+	}
 }
 
 // undo 'delete a task' event and function 
@@ -240,7 +308,7 @@ $('#undo').on('click',function(ev){
 		return 'nothing to undo'
 	}
 
-	restore( ind.task , ind.importance ,ind.done  );
+	restore( ind );
 	updateAvg();
 
 	ev.stopPropagation();
@@ -255,9 +323,9 @@ $('#undo-all').on('click',function(ev){
 	while (deleted.length > 0){
 	var ind = deleted[deleted.length-1] ;
 	console.log('restoring :' , deleted.length , ' items');
-		debugger;
-		console.log('inside the while loop',ind.task , ind.importance , ind.done);
-		restore(ind.task , ind.importance , ind.done);
+		//debugger;
+		console.log('inside the while loop ',ind );
+		restore(ind);
 	}
 	updateAvg();
 	ev.stopPropagation();	
@@ -292,7 +360,7 @@ function user (){
 	obj.pass = 'password';
 	obj.tasks = [];
 	obj.deletedTasks = [];
-	obj.doneTasks = 0;
+	//obj.doneTasks = doneTasks;
 
 	obj.showMyTasks = showMyTasks ;
 	obj.changeUserData = changeUserData;
@@ -302,6 +370,8 @@ function user (){
 
 	return obj;
 }
+
+
 
 
 //show tasks in a spicific array 
@@ -314,7 +384,7 @@ var showTasks = function (arr , mode='delete') {
 		$('#empty').hide();
 		$('#allList').html('');
 		for (var i=0 ; i < arr.length ; i++){
-			appending( arr[i].task , arr[i].importance , mode );
+			appending( arr[i] );
 		}
 	}
 }
@@ -341,6 +411,8 @@ var showMyTasks = function (){
 
 	$('ul + p').css('color','green');
 	$('ul + p').css('border-color','green');
+
+	updateCSS();
 	updateAvg();
 }
 
@@ -365,6 +437,7 @@ var showDeletedTasks = function (){
 
 	$('ul + p').css('color','red');
 	$('ul + p').css('border-color','red');
+	updateCSS();
 }
 
 //change 'current user' name inside the modal 'input tag' 
@@ -397,7 +470,6 @@ function changeUserPassword(){
 			$('#oldPass + p').css('color','red');
 			$('#oldPass + p').show();
 			return 'old password didn\'t change';
-
 	}
 }
 
@@ -484,7 +556,7 @@ var deleteUser = function(){
 
 //search using id , if i is passed as a parameter return index , else return the object 
 //reseve arr of obj with key called id 
-function search(arr , ID,i){
+function search(arr , ID ,i ){
 	var returnMe ;
 	console.log('search function for id :' , ID);
 	if (typeof ID === 'string'){
