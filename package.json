@@ -1,0 +1,37 @@
+{
+  "name": "emersive",
+  "version": "1.0.0",
+  "description": "emersive project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=8.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AsharDweedar/TODOlist.git"
+  },
+  "keywords": [
+    "todo",
+    "server"
+  ],
+  "author": "AsharDweedar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AsharDweedar/TODOlist/issues"
+  },
+  "homepage": "https://github.com/AsharDweedar/TODOlist#readme",
+  "dependencies": {
+    "jQuery": "^1.7.4",
+    "body-parser": "^1.9.2",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.4.1",
+    "mysql": "^2.14.1",
+    "request": "^2.69.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  }
+}
