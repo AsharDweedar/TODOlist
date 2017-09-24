@@ -33,7 +33,7 @@ function checkCookie(cname) {
 //hide the aside on click 
 $('body').on('click',':not(aside)',function(ev){
 	if ($('aside').hasClass('here')){
-		console.log('hiding the side bar');
+		//console.log('hiding the side bar');
 		$('aside').toggle(
 		function() {
 		    $(this).css('left', '0')
@@ -56,10 +56,10 @@ $('nav').on('click',function (ev) {
 	});
 	$('aside').toggleClass('here');
 	if ( $('aside').hasClass('here') ){
-		console.log('showing the side bar');
+		//console.log('showing the side bar');
 		$('.fa-cog').addClass('fa-spin');
 	} else {
-		console.log('hiding the side bar');
+		//console.log('hiding the side bar');
 		$('.fa-cog').removeClass('fa-spin');
 	}
 	ev.stopPropagation();
@@ -78,12 +78,12 @@ function searchTasks (arr , $tag){
 	var returnMe ;
 
 	arr.forEach(function(object,ind){
-		console.log(object, ind)
-		console.log($tag.data('val'))
+		//console.log(object, ind)
+		//console.log($tag.data('val'))
 
 		if ( $tag.data('val').split('-').join(' ') === object.task){
-			console.log(object.task);
-			console.log('object found at index ',ind)
+			//console.log(object.task);
+			//console.log('object found at index ',ind)
 			returnMe = ind ;
 		}
 	})	
@@ -101,14 +101,14 @@ function searchTasks (arr , $tag){
 */
 //update average => assign value to progress tag
 var updateAvg = function  (){
-	console.log('update AVG function')
+	//console.log('update AVG function')
 	var all = document.getElementsByTagName('li').length;
 	
 	var doneTasks = 0;
 	for (var c=0; c<currentUser.tasks.length;c++){
-		//console.log('c=',c , '\ncurrentUser.tasks[c].done:',currentUser.tasks[c].done);
+		////console.log('c=',c , '\ncurrentUser.tasks[c].done:',currentUser.tasks[c].done);
 		if (currentUser.tasks[c].done){
-			console.log('inside condition');
+			//console.log('inside condition');
 			doneTasks++;
 		}
 	}
@@ -126,6 +126,8 @@ function updateCSS (){
    }
 
 
+
+
 // done tasks function
 $('ul').on("click",'.fa-thumbs-o-up',function(){
 	if  ($('h1').hasClass('deletedMode')) {
@@ -135,8 +137,8 @@ $('ul').on("click",'.fa-thumbs-o-up',function(){
 
 		//change object connected to this tag
 
-		console.log(searchTasks(currentUser.tasks , $(this).parent()));
-		console.log(currentUser.tasks );
+		//console.log(searchTasks(currentUser.tasks , $(this).parent()));
+		//console.log(currentUser.tasks );
 
 		currentUser.tasks[searchTasks(currentUser.tasks , $(this).parent())].done = $(this).parent().hasClass('completed');
 		
@@ -154,7 +156,7 @@ $('ul').on("click",'.fa-trash',function(){
 	})
 
 	currentUser.deletedTasks.splice(searchTasks(currentUser.deletedTasks , $(this).parent()) , 1 ); 
-	
+
 	if (currentUser.deletedTasks.length === 0 ){
 			$('#empty').show();
 		}
@@ -167,7 +169,7 @@ $('ul').on("click",'.fa-trash',function(){
 //handle showing\hiding it from the window 
 function deleteMe ($dele){
 	var deletedTask =  { task: $dele.data('val').split('-').join(' ') ,  importance: $dele.find('.imp').data('val') ,done: $dele.hasClass('completed') }  
-	console.log('delete a task function: ' , deletedTask )
+	//console.log('delete a task function: ' , deletedTask )
 	currentUser.deletedTasks.push( deletedTask );
 
 	// this is to get the deleted tasks out of tasks arr ;
@@ -193,7 +195,7 @@ function deleteMe ($dele){
 // delete  event  => calls the restore or the delete function 
 //handle showing the #empty paragraph 
 $('ul').on("click",".fa-times",function(ev){
-	console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'),$(this).parent().hasClass('completed') );
+	//console.log('to delete event : ' ,$(this).parent().data('val'),$(this).parent().find('.imp').data('val'),$(this).parent().hasClass('completed') );
 
 	var obj = {
 		task : $(this).parent().data('val').split('-').join(' ') ,
@@ -254,10 +256,10 @@ $("h1").on("click",'.fa-plus-square',function () {
 $('button[type="reset"]').on('click',function(ev){
 	var arr = document.getElementsByTagName('li');
 	var numOfEle = arr.length ;
-	console.log('delete arr.length :' , numOfEle);
+	//console.log('delete arr.length :' , numOfEle);
 	while (numOfEle > 0){
 		var $del = $('#allList li:first-child');
-		console.log('delete element ', $del.data('val'));
+		//console.log('delete element ', $del.data('val'));
 		deleteMe($del);
 		numOfEle--;
 	}
@@ -269,10 +271,10 @@ $('button[type="reset"]').on('click',function(ev){
 //restore a task , recieve task info and add it to tasks arr , delete it from deleted arr 
 function restore ( taskObj ){
 
-	console.log('restore function')
+	//console.log('restore function')
 	var deleted = currentUser.deletedTasks ;
 
-	console.log('restor : ', taskObj )
+	//console.log('restor : ', taskObj )
 	currentUser.tasks.push( taskObj )
 		
 
@@ -281,7 +283,7 @@ function restore ( taskObj ){
 	var k ;
 	for ( k=0;k<deleted.length ; k++){
 		if (JSON.stringify(taskObj) === JSON.stringify(deleted[k])){
-			console.log('found :', taskObj , 'at index = ' , k)
+			//console.log('found :', taskObj , 'at index = ' , k)
 			break;
 		}
 	}
@@ -300,7 +302,7 @@ function restore ( taskObj ){
 // undo 'delete a task' event and function 
 //call restore function
 $('#undo').on('click',function(ev){
-	console.log('undo event ')
+	//console.log('undo event ')
 	var deleted = currentUser.deletedTasks ;
 	var ind = deleted[deleted.length-1] ;
 	if (deleted.length === 0 ){
@@ -318,13 +320,13 @@ $('#undo').on('click',function(ev){
 // undo all event and function
 //call restore function
 $('#undo-all').on('click',function(ev){
-	console.log('restore all event')
+	//console.log('restore all event')
 	var deleted = currentUser.deletedTasks ;
 	while (deleted.length > 0){
 	var ind = deleted[deleted.length-1] ;
-	console.log('restoring :' , deleted.length , ' items');
+	//console.log('restoring :' , deleted.length , ' items');
 		//debugger;
-		console.log('inside the while loop ',ind );
+		//console.log('inside the while loop ',ind );
 		restore(ind);
 	}
 	updateAvg();
@@ -394,7 +396,7 @@ var showMyTasks = function (){
 	$('h1').text('MY TO DO LIST');
 	$('h1').append('<i class="fa fa-plus-square" ></i>')
 
-	console.log('show my tasks function');
+	//console.log('show my tasks function');
 	$('#all>h1 , footer ').removeClass('deletedMode');
 	$('select , footer button, #sec , #adder  ,h1 i').show();
 	$('li span strong').html('');
@@ -418,7 +420,7 @@ var showMyTasks = function (){
 
 //show deleted tasks for current user , enter deleted mode styles
 var showDeletedTasks = function (){
-	console.log('show deleted tasks function');
+	//console.log('show deleted tasks function');
 	$('#all>h1 , footer').addClass('deletedMode');
 	$('select , footer button , #sec , #adder ,h1 i').hide();
 	$('h1').text('DELETED TASKS');
@@ -443,7 +445,7 @@ var showDeletedTasks = function (){
 //change 'current user' name inside the modal 'input tag' 
 // 'this' means the user (this function is inside the user obj)
 function changeUserName(){
-	console.log('change user name function')
+	//console.log('change user name function')
 	var name = $('#newName').val();
 	if (name !== undefined)
 		this.name = name;
@@ -454,9 +456,9 @@ function changeUserName(){
 //change 'current user' password inside the modal 'input tag' 
 // 'this' means the user (this function is inside the user obj)
 function changeUserPassword(){
-	console.log('change user password function');
+	//console.log('change user password function');
 	if ($('#oldPass').val() === this.pass ){
-		console.log('passwords matched')
+		//console.log('passwords matched')
 		this.pass = $('#newPass').val();
 		$('#oldPass + p').text('password changed');
 		$('#oldPass + p').css('color','green');
@@ -475,7 +477,7 @@ function changeUserPassword(){
 
 //show the 'change my data' modal : (for current user info)
 function changeUserData (){
-	console.log('show the "change user data " function / showing modal');
+	//console.log('show the "change user data " function / showing modal');
 	$('#oldPass').val('');
 	$('#newPass').val('');
 	$('#oldPass + p').hide();
@@ -485,7 +487,7 @@ function changeUserData (){
 
 //add a new user function
 var addUser = function(){
-	console.log('adding new user , new user function')
+	//console.log('adding new user , new user function')
 	var obj = user();
 	obj.name = prompt('type new user name :');
 	if (obj.name === null){
@@ -511,7 +513,7 @@ var setUser = function (obj){
 //show modal of all users  
 //recive a function for the button beside each user 
 function showAllUsers (func){
-	console.log('show all users functoin')
+	//console.log('show all users functoin')
 	$('tbody').text('');
 	allUsers.forEach(function(ele){
 		$('tbody').append('<tr data-val=" '+ele.id+' " ><td style="padding-right:50px"> '+ele.id+' </td><td style="padding-right:50px"> '+ele.name+' </td><td><button class="'+func+'"> choose me </button></td></tr>');
@@ -525,7 +527,7 @@ $('td').css('margin','10px')
 
 // the delete  user event for the button inside the table if it have the class 'toDelete' ,  inside the 'all users' modal 
 $('tbody').on('click','.toDelete',function(){
-	console.log('the delete user function');
+	//console.log('the delete user function');
 	if ($(this).parent().parent().data('val') === currentUser.id){
 		alert('you can\'t delete current user ');
 		return 'un-allowed attempt';
@@ -540,7 +542,7 @@ $('tbody').on('click','.toDelete',function(){
 				alert("passwords didn't match");
 			}
 		} else { 
-			console.log('error, user not found');
+			//console.log('error, user not found');
 		}
 })
 
@@ -549,7 +551,7 @@ $('tbody').on('click','.toDelete',function(){
 // choose a user to delete 
 //call show all users function with the class toDelete for the button of each user  
 var deleteUser = function(){
-		console.log('delete user event ')
+		//console.log('delete user event ')
 		showAllUsers("toDelete");
 }
 
@@ -558,13 +560,13 @@ var deleteUser = function(){
 //reseve arr of obj with key called id 
 function search(arr , ID ,i ){
 	var returnMe ;
-	console.log('search function for id :' , ID);
+	//console.log('search function for id :' , ID);
 	if (typeof ID === 'string'){
 		ID = JSON.parse(ID);
 	}
 		arr.forEach(function(object,ind){
 			if (ID === object.id){
-				console.log('object found at index ',ind)
+				//console.log('object found at index ',ind)
 				if (i !== undefined){
 					returnMe = ind;
 				} else {
@@ -577,7 +579,7 @@ function search(arr , ID ,i ){
 
 //change user event and function if the button of the table inside the modal of 'all users' has the class 'changeUser'
 $('tbody').on('click','.changeUser',function(){
-		console.log('the change user event and function ..');
+		//console.log('the change user event and function ..');
 		var obj = search(allUsers , $(this).parent().parent().data('val'));
 		if (currentUser === obj){
 			return 'you are already logged in';
@@ -591,14 +593,14 @@ $('tbody').on('click','.changeUser',function(){
 			alert("passwords didn't match");
 			}
 		} else { 
-			console.log('error');
+			//console.log('error');
 		}
 })
 
 
 //change current user , the function to set the class of 'changeUser' to the button of 'all users' modal 
 function changeCurrentUser(ev){
-	console.log('changeCurrentUser func')
+	//console.log('changeCurrentUser func')
 	showAllUsers("changeUser");
 }
 
